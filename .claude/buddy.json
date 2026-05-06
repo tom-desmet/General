@@ -2,11 +2,11 @@
   "name": "Mischief",
   "species": "codeling",
   "born": "2026-05-04",
-  "xp": 10,
+  "xp": 20,
   "level": 1,
-  "mood": "curious",
+  "mood": "focused",
   "personality": "chaotic",
-  "sessionsWatched": 2,
+  "sessionsWatched": 3,
   "lastSeen": "2026-05-06",
   "favoriteThing": null
 }
