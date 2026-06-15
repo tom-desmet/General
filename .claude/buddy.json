@@ -2,11 +2,11 @@
   "name": "Magister",
   "species": "codeling",
   "born": "2026-05-06",
-  "xp": 0,
+  "xp": 10,
   "level": 1,
-  "mood": "curious",
+  "mood": "dramatic",
   "personality": "wise",
-  "sessionsWatched": 1,
-  "lastSeen": "2026-05-06",
+  "sessionsWatched": 2,
+  "lastSeen": "2026-05-27",
   "favoriteThing": null
 }
