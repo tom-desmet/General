@@ -1,16 +1,17 @@
-# REDCap Task 1 — Build Guide v4
+# Optional addendum — integrating the calculated BMI and age into Screening
 
-**Supersedes v3.** v3 told you to convert `bmi_above_35` and `age_18_or_older` into plain collected radios and left it there — which fixes the broken syntax but leaves a human retyping two numbers the database already knows. That is the exact failure mode visible in the Task 2 review file.
-
-v4 adds **Section 0**: derive both criteria from Form 1, pre-fill them, and keep a loud warning on the override path. Sections 1–10 are unchanged from v3 except for the amendments listed in §0.9.
-
-**Interactive version:** `build-console.html` in this directory — the full guide as a checklist with copy-to-clipboard logic strings, filters by instrument and priority, and a live simulator of the Form 1 → Form 3 derivation.
-
-**Deadline:** Monday 17 August 2026, 23:00 CEST.
+> **Not part of the build guide.** This was drafted before the scope was clarified and is parked
+> here in case it is useful. The console and `REDCap_Task1_Build_Guide_v3.md` do **not** reference
+> it, and following the guide as written does not require any of this.
+>
+> **What it proposes:** the BMI and age already calculated on Demographics seed the corresponding
+> Screening criteria via `@DEFAULT`, instead of being retyped as Yes/No. The criteria stay
+> collected and editable — the assignment requires Yes/No responses to be collected, and an
+> override has to remain possible or a participant enrolled against criteria becomes unrecordable.
 
 ---
 
-## 0. Integrate the calculated BMI and age into Screening
+## Integrate the calculated BMI and age into Screening
 
 ### 0.0 Why this is the right shape
 
@@ -188,26 +189,3 @@ If a reviewer asks *"what happens if the forms are completed out of order?"*, yo
 > No — and the distinction is why the requirement has two clauses. The value is stored as a collected response, it is editable, it appears in the audit trail as a user entry, and it can disagree with the derived value. What the pre-fill removes is the transcription step, which is where the error in the Task 2 data actually came from. What it keeps is the human confirmation and the ability to override, which is what makes an erroneous enrolment recordable and the protocol deviation traceable.
 
 ---
-
-## 1–10. Unchanged from v3
-
-See `REDCap_Task1_Build_Guide_v3.md` for the full text of sections 1 through 10, or work from `build-console.html`, which carries all of it as a checklist with the §0.9 amendments already applied.
-
-Summary of what those sections cover:
-
-| Section | What it is | Time |
-|---|---|---|
-| §1 | Six breaking fixes — `age`, `d1_date`, `bmi_above_35`, `eligible`, `specify_other`, `[event-label]` | 30 min |
-| §2 | Structural gaps — repeating instruments, event designation, Delivery access | 35 min |
-| §3 | Form-by-form remediation across all eight instruments | 90 min |
-| §4 | Cross-field warning library — eleven descriptive-field warnings | 45 min |
-| §5 | Data Resolution Workflow + twelve custom Data Quality rules | 30 min |
-| §6 | Paper CRF generation and checks | 25 min |
-| §7 | Test records | 30 min |
-| §8 | Submission pack and build note | 25 min |
-| §9 | Defending the design | — |
-| §10 | Quick reference — events, logic syntax, action tags | — |
-
----
-
-*Version v4 — 16 August 2026. Supersedes REDCap_Task1_Build_Guide_v3.md.*

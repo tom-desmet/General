@@ -1,36 +1,42 @@
 # REDCap Task 1 — Build Console
 
-Working materials for the Data Manager assessment, Task 1 (REDCap database development).
+The build guide for the Data Manager assessment, Task 1, as an interactive working page.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `build-console.html` | **The interactive guide.** Open in any browser — no build step, no dependencies, no network access. |
-| `REDCap_Task1_Build_Guide_v4.md` | Section 0 in full (the BMI/age integration) plus the amendments it makes to v3 |
-| `REDCap_Task1_Build_Guide_v3.md` | The previous guide, carried forward for reference |
+| `build-console.html` | **The console.** Open in any browser — no build step, no dependencies, no network access. |
+| `REDCap_Task1_Build_Guide_v3.md` | The source guide it was built from |
+| `optional/bmi-integration-addendum.md` | A parked design note, not referenced by the guide — see below |
 
-## What changed in v4
+## What the console does
 
-v3 converted `bmi_above_35` and `age_18_or_older` into plain collected radios. That fixes the broken calculation syntax but leaves study staff retyping two numbers the database already holds — which is the failure visible in the Task 2 review file.
+The v3 guide is ~800 lines of markdown you scroll and lose your place in. The console is the same
+content, restructured around how you actually work: in REDCap Designer, one form at a time, with a
+deadline.
 
-v4 wires Form 1 into Form 3:
+- **38 build steps as checkboxes**, with progress tracked overall and per section. State persists in
+  the browser, so you can close the tab and come back.
+- **Copy button on all 42 logic strings**, choice lists, and field notes — nothing gets retyped into
+  REDCap by hand.
+- **Group by instrument.** One toggle turns the section-ordered guide into nine per-form lists
+  (Demographics, Medical History, Screening, Blood Sampling, Vaccination, Adverse Events, Protocol
+  Deviations, Delivery, and project-level), each with its Designer path and its own done-count. Open
+  one form in REDCap, work its list, close it.
+- **Filter** by instrument or by priority (critical / high / polish), hide what's already done, and
+  free-text search every step for a variable name.
+- **Section navigation** with scroll-spy and a per-section completion count.
 
-- Two hidden calculated flags on **Demographics** (`bmi_gt35_calc`, `age_ge18_calc`) turn the computed BMI and age into criterion answers
-- `@DEFAULT` on the two Screening radios seeds them from those flags, so the common case takes zero decisions
-- The source numbers are piped into the field labels, so the answer is verifiable without leaving the form
-- `w_demog_missing` blocks the top of Screening when Demographics is incomplete, so nothing is guessed
-- The existing discrepancy warnings and Data Quality rules stay as the backstop for overrides, imports, and later edits
+Everything from the guide is carried over: the six breaking fixes, the structural gaps, the
+form-by-form remediation, the eleven-warning library, the Data Resolution Workflow and twelve Data
+Quality rules, the paper CRF checks, test records, the submission pack, and the design defences.
 
-The fields stay **collected and editable** on purpose. The assignment requires Yes/No responses to be collected, and an override has to remain possible — otherwise a participant enrolled against criteria becomes unrecordable and the protocol deviation is never triggered.
+## The optional addendum
 
-The overall `eligible` decision is deliberately **not** pre-filled. The form shows what the six criteria imply; the investigator records the actual decision.
+`optional/bmi-integration-addendum.md` proposes deriving the age and BMI screening criteria from the
+values Form 1 already calculates, rather than having staff retype them as Yes/No. It was drafted
+before the scope of this work was clarified and is kept only in case it's wanted later.
 
-## The console
-
-- All 47 build steps as checkboxes, with progress tracked per section (persists in the browser)
-- Copy button on every logic string, choice list, and field note — 42 of them
-- Filter by instrument, by priority, or by what's still outstanding; free-text search across every step
-- A **live simulator** of the Form 1 → Form 3 derivation: change height, weight or date of birth and watch the criteria pre-fill, then override one and watch the real warning text fire
-
-Four presets in the simulator: `P003 — enrolled in error`, `Clean adult`, `Demographics not done`, and `BMI 35.0 exactly` (the boundary — the criterion is *above* 35, so 35.0 passes).
+**It is not wired into the console or the guide.** Following the guide as written requires none of
+it, and `build-console.html` is a faithful interactive version of v3.

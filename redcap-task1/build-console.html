@@ -567,197 +567,6 @@ td.c{text-align:center;font-family:var(--mono);color:var(--accent);font-weight:6
 tbody tr:hover{background:var(--surface-2)}
 
 /* ============================================================
-   SIMULATOR
-   ============================================================ */
-.sim{
-  border:1px solid var(--line-2);
-  border-radius:8px;
-  background:var(--surface);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-.simhead{
-  padding:13px 18px;
-  border-bottom:1px solid var(--line);
-  background:var(--surface-2);
-  display:flex;
-  flex-wrap:wrap;
-  align-items:baseline;
-  gap:10px;
-}
-.simhead h3{
-  font-family:var(--mono);
-  font-size:var(--f-base);
-  font-weight:600;
-  margin:0;
-  letter-spacing:-.02em;
-}
-.simhead .simsub{font-size:var(--f-xs);color:var(--ink-3);font-family:var(--mono)}
-.simgrid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch}
-.pane{padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.pane + .pipe + .pane{border-left:1px solid var(--line)}
-.panehead{display:flex;flex-direction:column;gap:2px}
-.panehead .pform{
-  font-family:var(--mono);
-  font-size:10.5px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--accent);
-  font-weight:600;
-}
-.panehead .pname{font-family:var(--mono);font-size:var(--f-sm);font-weight:600;letter-spacing:-.01em}
-
-.pipe{
-  width:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--surface-2);
-  border-left:1px solid var(--line);
-  position:relative;
-}
-.pipe span{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--accent);
-  font-weight:600;
-  writing-mode:vertical-rl;
-  white-space:nowrap;
-}
-
-.frow{display:flex;flex-direction:column;gap:4px}
-.frow label,.flab{
-  font-family:var(--mono);
-  font-size:var(--f-xs);
-  color:var(--ink-3);
-  letter-spacing:.02em;
-}
-.frow input[type="number"],.frow input[type="date"]{
-  font-family:var(--mono);
-  font-size:var(--f-sm);
-  padding:6px 8px;
-  border:1px solid var(--line-2);
-  border-radius:4px;
-  background:var(--surface);
-  color:var(--ink);
-  width:100%;
-  font-variant-numeric:tabular-nums;
-}
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-.derived{
-  border:1px dashed var(--line-2);
-  border-radius:var(--r);
-  padding:11px 13px;
-  background:var(--surface-2);
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-.dline{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.dline .dk{font-family:var(--mono);font-size:var(--f-xs);color:var(--ink-3)}
-.dline .dv{
-  font-family:var(--mono);
-  font-size:var(--f-base);
-  font-weight:600;
-  font-variant-numeric:tabular-nums;
-  letter-spacing:-.02em;
-}
-.dv.blank{color:var(--ink-3);font-weight:400;font-size:var(--f-sm)}
-.dv.hi{color:var(--crit)}
-
-.crit-q{display:flex;flex-direction:column;gap:6px;padding:11px 0;border-top:1px solid var(--line)}
-.crit-q:first-of-type{border-top:none}
-.qlab{font-size:var(--f-sm);color:var(--ink);line-height:1.45}
-.qlab .piped{
-  font-family:var(--mono);
-  color:var(--accent);
-  font-weight:600;
-  font-variant-numeric:tabular-nums;
-}
-.qnote{font-size:var(--f-xs);color:var(--ink-3);line-height:1.45}
-.yn{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.yn .flab{flex:none;min-width:11em;color:var(--ink-2)}
-.yn button{
-  font-family:var(--mono);
-  font-size:var(--f-sm);
-  padding:4px 13px;
-  border:1px solid var(--line-2);
-  background:var(--surface);
-  color:var(--ink-2);
-  border-radius:4px;
-  cursor:pointer;
-  font-weight:600;
-  letter-spacing:.01em;
-}
-.yn button:hover{border-color:var(--accent)}
-.yn button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
-:root[data-theme="dark"] .yn button[aria-pressed="true"],
-:root:not([data-theme="light"]) .yn button[aria-pressed="true"]{color:var(--ground)}
-.yn .pre{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:var(--ok);
-  align-self:center;
-  font-weight:600;
-  margin-left:2px;
-}
-.yn .pre.gone{color:var(--warn)}
-
-.alert{
-  border:1px solid var(--crit-line);
-  background:var(--crit-soft);
-  color:var(--crit);
-  border-radius:var(--r);
-  padding:10px 13px;
-  font-size:var(--f-sm);
-  line-height:1.5;
-  display:flex;
-  gap:9px;
-  align-items:flex-start;
-}
-.alert.amber{border-color:var(--warn-line);background:var(--warn-soft);color:var(--warn)}
-.alert.good{border-color:var(--ok-line);background:var(--ok-soft);color:var(--ok)}
-.alert .aicon{font-family:var(--mono);font-weight:700;flex:none;line-height:1.5}
-.alert .abody{min-width:0}
-.alert .aname{
-  font-family:var(--mono);
-  font-size:10.5px;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  font-weight:600;
-  display:block;
-  opacity:.85;
-  margin-bottom:2px;
-}
-.alerts{display:flex;flex-direction:column;gap:8px}
-.alerts:empty{display:none}
-
-.simfoot{
-  padding:11px 18px;
-  border-top:1px solid var(--line);
-  background:var(--surface-2);
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
-  justify-content:space-between;
-}
-.presets{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.presets .plab{
-  font-family:var(--mono);
-  font-size:10.5px;
-  letter-spacing:.11em;
-  text-transform:uppercase;
-  color:var(--ink-3);
-  font-weight:600;
-}
-
-/* ============================================================
    MISC
    ============================================================ */
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
@@ -790,6 +599,42 @@ tbody tr:hover{background:var(--surface-2)}
 .card .verdict.yes{color:var(--ok)}
 .card .verdict.no{color:var(--crit)}
 
+/* ---- group-by-instrument view ---- */
+#formview{display:none;flex-direction:column;gap:44px}
+body.byform #formview{display:flex}
+body.byform .sec{display:none}
+body.byform .masthead{margin-bottom:-14px}
+body.byform #jumpgroup{display:none}
+.fgroup{display:flex;flex-direction:column;gap:14px}
+.fgroup.allhidden{display:none}
+.fghead{
+  display:flex;
+  align-items:baseline;
+  gap:11px;
+  padding-bottom:5px;
+  border-bottom:1px solid var(--line);
+}
+.fghead h2{
+  font-family:var(--mono);
+  font-size:var(--f-lg);
+  font-weight:600;
+  letter-spacing:-.03em;
+  margin:0;
+}
+.fghead .fgcount{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+  margin-left:auto;
+}
+.fghead .fgwhere{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--accent);
+  letter-spacing:.02em;
+}
+
 .empty{
   display:none;
   padding:26px;
@@ -809,12 +654,6 @@ tbody tr:hover{background:var(--surface-2)}
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width:1000px){
-  .simgrid{grid-template-columns:1fr}
-  .pane + .pipe + .pane{border-left:none;border-top:1px solid var(--line)}
-  .pipe{width:auto;height:30px;border-left:none;border-top:1px solid var(--line)}
-  .pipe span{writing-mode:horizontal-tb}
-}
 @media (max-width:860px){
   .shell{grid-template-columns:1fr}
   .rail{
@@ -839,7 +678,7 @@ tbody tr:hover{background:var(--surface-2)}
   <div class="brand">
     <span class="mark">Task 1 · REDCap</span>
     <h1>Build Console</h1>
-    <span class="sub">v4 · rev 16 Aug 2026</span>
+    <span class="sub">v3 · rev 16 Aug 2026</span>
   </div>
 
   <div class="progress">
@@ -855,7 +694,7 @@ tbody tr:hover{background:var(--surface-2)}
     </div>
   </div>
 
-  <div class="railgroup">
+  <div class="railgroup" id="jumpgroup">
     <h2>Sections</h2>
     <nav class="jump" id="jump"></nav>
   </div>
@@ -892,6 +731,7 @@ tbody tr:hover{background:var(--surface-2)}
   <div class="railgroup">
     <h2>View</h2>
     <div class="filters">
+      <button class="fbtn" id="byform" aria-pressed="false">group by instrument</button>
       <button class="fbtn" id="hidedone" aria-pressed="false">hide done</button>
     </div>
   </div>
@@ -910,398 +750,11 @@ tbody tr:hover{background:var(--surface-2)}
     <span>6 events · 8 instruments · 67 fields</span><span>·</span>
     <span>Due <b>Mon 17 Aug, 23:00 CEST</b></span>
   </div>
-  <h1>Stop the eligibility form from asking a question it can already answer.</h1>
-  <p class="lede">Form 1 already computes BMI from height and weight, and age from date of birth. Form 3 then asks a human to retype both as Yes/No — which is exactly where the Task 2 dataset went wrong. <strong>This build derives both answers, pre-fills them, and makes any override impossible to miss.</strong> Everything else from the v3 guide is here too, as a checklist you can work down.</p>
+  <h1>Thirty-eight fixes between here and Monday.</h1>
+  <p class="lede">The whole build guide as a working checklist: every fix with its navigation path, every logic string on a copy button, and progress that persists while you work. <strong>Filter to one instrument and the list becomes that form's to-do list</strong> — which is how you actually work in Designer, one form at a time.</p>
 </header>
 
-<!-- ===================== §0 BMI INTEGRATION ===================== -->
-<section class="sec" id="s-bmi" data-title="BMI &amp; age integration" data-n="0">
-  <div class="sechead">
-    <span class="eyebrow">Section 0 · the change you asked for</span>
-    <h2>Derive the criteria, don't retype them</h2>
-    <p>Two of the six screening criteria are already knowable from Demographics. Wire them across, then keep a warning on the override path — because the assignment asks for both.</p>
-  </div>
-
-  <div class="note">
-    <span class="nlabel">The constraint, in the assignment's own words</span>
-    The form <strong>"should collect Yes/No responses"</strong> for all six criteria — and separately, a participant with BMI &gt; 35 <strong>"should not be recorded as satisfying the corresponding eligibility requirement without an appropriate warning or check."</strong> The second clause only makes sense if the field <em>can</em> disagree. So the answer is not to lock the field — it is to derive it, pre-fill it, and make disagreement loud and auditable.
-  </div>
-
-  <!-- SIMULATOR -->
-  <div class="sim">
-    <div class="simhead">
-      <h3>Live derivation preview</h3>
-      <span class="simsub">type on the left — watch Form 3 fill itself</span>
-    </div>
-    <div class="simgrid">
-
-      <div class="pane">
-        <div class="panehead">
-          <span class="pform">Form 1 · Day 1</span>
-          <span class="pname">Demographics &amp; Anthropometry</span>
-        </div>
-
-        <div class="f2">
-          <div class="frow">
-            <label for="i-h">height (cm)</label>
-            <input id="i-h" type="number" min="100" max="220" step="0.1" value="172">
-          </div>
-          <div class="frow">
-            <label for="i-w">weight (kg)</label>
-            <input id="i-w" type="number" min="30" max="200" step="0.1" value="108">
-          </div>
-        </div>
-        <div class="f2">
-          <div class="frow">
-            <label for="i-dob">dob</label>
-            <input id="i-dob" type="date" value="1994-03-14">
-          </div>
-          <div class="frow">
-            <label for="i-d1">d1_date</label>
-            <input id="i-d1" type="date" value="2026-08-17">
-          </div>
-        </div>
-
-        <div class="derived">
-          <div class="dline">
-            <span class="dk">bmi <span style="opacity:.7">= weight / (height/100)²</span></span>
-            <span class="dv" id="o-bmi">—</span>
-          </div>
-          <div class="dline">
-            <span class="dk">bmi_gt35_calc <span style="opacity:.7">= if([bmi]&gt;35,1,0)</span></span>
-            <span class="dv" id="o-bmiflag">—</span>
-          </div>
-          <div class="dline">
-            <span class="dk">age <span style="opacity:.7">= rounddown(datediff)</span></span>
-            <span class="dv" id="o-age">—</span>
-          </div>
-          <div class="dline">
-            <span class="dk">age_ge18_calc <span style="opacity:.7">= if([age]&gt;=18,1,0)</span></span>
-            <span class="dv" id="o-ageflag">—</span>
-          </div>
-        </div>
-
-        <p class="qnote" style="margin:0">
-          <strong style="color:var(--ink-2)">bmi</strong> and <strong style="color:var(--ink-2)">age</strong> already exist on your form.
-          The two <code style="font-size:.9em">*_calc</code> flags are the only new fields here — steps 0.1 and 0.2.
-          They live on <em>Demographics</em> rather than Screening so that they are already stored in the database
-          by the time Screening is opened, which is what lets <code style="font-size:.9em">@DEFAULT</code> read them.
-        </p>
-      </div>
-
-      <div class="pipe"><span>@DEFAULT →</span></div>
-
-      <div class="pane">
-        <div class="panehead">
-          <span class="pform">Form 3 · Day 1</span>
-          <span class="pname">Screening &amp; Eligibility</span>
-        </div>
-
-        <div class="alerts" id="a-top"></div>
-
-        <div class="crit-q">
-          <span class="qlab">Is the participant at least 18 years old? <span class="piped" id="q-agepipe"></span></span>
-          <div class="yn" data-q="age18">
-            <button type="button" data-v="1" aria-pressed="false">Yes</button>
-            <button type="button" data-v="0" aria-pressed="false">No</button>
-            <span class="pre" id="pre-age18"></span>
-          </div>
-          <span class="qnote">Pre-filled from the age calculated on Demographics.</span>
-        </div>
-
-        <div class="crit-q">
-          <span class="qlab">Is the BMI above 35 kg/m²? <span class="piped" id="q-bmipipe"></span></span>
-          <div class="yn" data-q="bmi35">
-            <button type="button" data-v="1" aria-pressed="false">Yes</button>
-            <button type="button" data-v="0" aria-pressed="false">No</button>
-            <span class="pre" id="pre-bmi35"></span>
-          </div>
-          <span class="qnote">Yes = criterion present (exclusionary). Pre-filled from the BMI calculated on Demographics.</span>
-        </div>
-
-        <div class="crit-q">
-          <span class="qlab">Remaining four criteria <span style="color:var(--ink-3)">— collected as normal</span></span>
-          <div class="yn" data-q="healthy"><span class="flab">generally_healthy</span><button type="button" data-v="1" aria-pressed="true">Yes</button><button type="button" data-v="0" aria-pressed="false">No</button></div>
-          <div class="yn" data-q="icf"><span class="flab">icf_signed</span><button type="button" data-v="1" aria-pressed="true">Yes</button><button type="button" data-v="0" aria-pressed="false">No</button></div>
-          <div class="yn" data-q="ebola"><span class="flab">prev_ebola_trial</span><button type="button" data-v="1" aria-pressed="false">Yes</button><button type="button" data-v="0" aria-pressed="true">No</button></div>
-          <div class="yn" data-q="mpox"><span class="flab">prev_mpox_vacc</span><button type="button" data-v="1" aria-pressed="false">Yes</button><button type="button" data-v="0" aria-pressed="true">No</button></div>
-        </div>
-
-        <div class="crit-q">
-          <span class="qlab">Is the participant eligible for enrolment?</span>
-          <div class="yn" data-q="elig">
-            <button type="button" data-v="1" aria-pressed="false">Yes</button>
-            <button type="button" data-v="0" aria-pressed="false">No</button>
-          </div>
-          <span class="qnote">Deliberately <strong>not</strong> pre-filled — this is the investigator's decision, not an arithmetic result.</span>
-        </div>
-
-        <div class="alerts" id="a-bot"></div>
-      </div>
-    </div>
-
-    <div class="simfoot">
-      <div class="presets">
-        <span class="plab">Try</span>
-        <button class="fbtn" data-preset="p003">P003 — enrolled in error</button>
-        <button class="fbtn" data-preset="clean">Clean adult</button>
-        <button class="fbtn" data-preset="blank">Demographics not done</button>
-        <button class="fbtn" data-preset="edge">BMI 35.0 exactly</button>
-      </div>
-      <span class="simsub" style="color:var(--ink-3)">no data leaves this page</span>
-    </div>
-  </div>
-
-  <div class="note ok">
-    <span class="nlabel">What the preview is showing you</span>
-    The pre-fill puts the right answer in the box, so the common case takes zero decisions. The green <code>PRE-FILLED</code> tag turns amber the moment a human overrides it, the red warning block appears, and the value still saves — because a participant enrolled against criteria has to be <em>recordable</em>, or the protocol deviation never gets written.
-  </div>
-
-  <!-- BUILD STEPS -->
-  <div class="items" id="items-bmi">
-
-    <article class="item" data-form="demographics" data-prio="critical" data-id="0.1">
-      <label class="tick"><input type="checkbox" data-key="0.1"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.1</span>
-          <h3>Add <code>bmi_gt35_calc</code> to Demographics</h3>
-          <span class="chip chip-critical">critical</span>
-          <span class="chip chip-form">Demographics</span>
-        </div>
-        <p class="path">Designer → Demographics → add field immediately after <code>bmi</code></p>
-        <p>A <strong>Calculated Field</strong> that turns the BMI number into the criterion's answer. It lives on Demographics, not Screening, and that placement is the whole trick: a calc field only stores its value when <em>its own</em> form is saved. Put it here and the flag is already in the database before Screening is ever opened, which is what makes the pre-fill in step 0.3 fire on first load.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Calculation</span><button class="copy">Copy</button></div>
-          <pre>if([bmi] = "", "", if([bmi] &gt; 35, 1, 0))</pre>
-        </div>
-        <ul>
-          <li>Field label: <code>BMI &gt; 35 kg/m² (derived for screening)</code></li>
-          <li>Field Annotation: <code>@HIDDEN-PDF</code> — it is a machine value, not a paper question</li>
-          <li>Leave it <strong>visible on screen</strong>. It costs one line and it lets the assessors see the derivation without opening the data dictionary.</li>
-        </ul>
-        <div class="note warn">
-          <span class="nlabel">Why the blank guard matters</span>
-          Without <code>if([bmi] = "", "", …)</code> an empty BMI evaluates as <code>0</code>, and the flag would confidently pre-fill <em>"No, BMI is not above 35"</em> for a participant who has never been measured. That is a worse failure than the one you are fixing.
-        </div>
-      </div>
-    </article>
-
-    <article class="item" data-form="demographics" data-prio="critical" data-id="0.2">
-      <label class="tick"><input type="checkbox" data-key="0.2"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.2</span>
-          <h3>Add <code>age_ge18_calc</code> to Demographics</h3>
-          <span class="chip chip-critical">critical</span>
-          <span class="chip chip-form">Demographics</span>
-        </div>
-        <p class="path">Designer → Demographics → add field immediately after <code>age</code></p>
-        <p>Same pattern, the other criterion the assignment explicitly names. Depends on §1.1 being done first — <code>age</code> has to be calculating off <code>[d1_date]</code> rather than <code>'today'</code>, or this flag drifts every time the form is re-saved.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Calculation</span><button class="copy">Copy</button></div>
-          <pre>if([age] = "", "", if([age] &gt;= 18, 1, 0))</pre>
-        </div>
-        <ul>
-          <li>Field label: <code>Age ≥ 18 at enrolment (derived for screening)</code></li>
-          <li>Field Annotation: <code>@HIDDEN-PDF</code></li>
-        </ul>
-      </div>
-    </article>
-
-    <article class="item" data-form="screening" data-prio="critical" data-id="0.3">
-      <label class="tick"><input type="checkbox" data-key="0.3"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.3</span>
-          <h3>Pre-fill the two criteria with <code>@DEFAULT</code></h3>
-          <span class="chip chip-critical">critical</span>
-          <span class="chip chip-form">Screening</span>
-        </div>
-        <p class="path">Designer → Screening and Eligibility → <code>age_18_or_older</code> and <code>bmi_above_35</code> → Field Annotation</p>
-        <p>Both fields become <strong>radio</strong>, choices <code>1, Yes | 0, No</code>, Required = y (per §1.3 and §3.3), and each carries an annotation that seeds it from the derived flag. <code>@DEFAULT</code> writes only into an <em>empty</em> field, so it can never silently overwrite something a person entered.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Field Annotation · age_18_or_older</span><button class="copy">Copy</button></div>
-          <pre>@DEFAULT="[age_ge18_calc]"</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Field Annotation · bmi_above_35</span><button class="copy">Copy</button></div>
-          <pre>@DEFAULT="[bmi_gt35_calc]"</pre>
-        </div>
-        <p>Both instruments sit in the same event (<code>day_1_arm_1</code>), so the plain field name resolves — no event prefix needed. If you ever move Screening to another event, it becomes <code>@DEFAULT="[day_1_arm_1][bmi_gt35_calc]"</code>.</p>
-        <div class="note warn">
-          <span class="nlabel">The one ordering caveat — say this out loud if asked</span>
-          <code>@DEFAULT</code> is evaluated when the form is <em>loaded</em>. Open Screening before Demographics has ever been saved and there is nothing to copy, so the fields stay blank. That is the correct behaviour — blank beats guessed — and step 0.5 puts a visible block on the form for exactly that case.
-        </div>
-      </div>
-    </article>
-
-    <article class="item" data-form="screening" data-prio="high" data-id="0.4">
-      <label class="tick"><input type="checkbox" data-key="0.4"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.4</span>
-          <h3>Pipe the real numbers into the two labels</h3>
-          <span class="chip chip-high">high</span>
-          <span class="chip chip-form">Screening</span>
-        </div>
-        <p class="path">Designer → Screening and Eligibility → field labels</p>
-        <p>Pre-filling is only half of it. The person confirming the answer should be able to <em>see</em> the number it came from without navigating back to Form 1. Piping in the label does that for free and it prints onto the paper CRF as a blank to transcribe.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Label · age_18_or_older</span><button class="copy">Copy</button></div>
-          <pre>Is the participant at least 18 years old?
-&lt;span style="font-weight:normal;color:#0A5F73"&gt;Age calculated from date of birth: &lt;b&gt;[age]&lt;/b&gt; years&lt;/span&gt;</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Label · bmi_above_35</span><button class="copy">Copy</button></div>
-          <pre>Is the BMI above 35 kg/m²?
-&lt;span style="font-weight:normal;color:#0A5F73"&gt;BMI calculated from Day 1 measurements: &lt;b&gt;[bmi]&lt;/b&gt; kg/m² ([height] cm, [weight] kg)&lt;/span&gt;</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Field notes · both fields</span><button class="copy">Copy</button></div>
-          <pre>Pre-filled from the value calculated on the Demographics form. Change it only if the Day 1 measurements are themselves wrong — in that case correct Demographics first, then return here.</pre>
-        </div>
-      </div>
-    </article>
-
-    <article class="item" data-form="screening" data-prio="high" data-id="0.5">
-      <label class="tick"><input type="checkbox" data-key="0.5"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.5</span>
-          <h3>Add <code>w_demog_missing</code> — the gate at the top of the form</h3>
-          <span class="chip chip-high">high</span>
-          <span class="chip chip-form">Screening</span>
-        </div>
-        <p class="path">Designer → Screening and Eligibility → new Descriptive Text field, <strong>first field on the form</strong></p>
-        <p>This is the field that actually prevents the wrong click. If Demographics has not been completed, neither criterion can be pre-filled or checked — so say so, at the top, before anything else is answered.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div>
-          <pre>[bmi] = "" or [age] = ""</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Field label (HTML)</span><button class="copy">Copy</button></div>
-          <pre>&lt;div style="color:#8A5800;font-weight:bold;padding:8px;border:1px solid #8A5800;border-radius:4px;"&gt;
-⚠ Demographics is not complete for this participant. The age and BMI criteria below cannot be pre-filled or checked against source until height, weight and date of birth are entered on Form 1. Complete Demographics first.
-&lt;/div&gt;</pre>
-        </div>
-        <p>Annotation: <code>@HIDDEN-PDF</code>.</p>
-      </div>
-    </article>
-
-    <article class="item" data-form="screening" data-prio="critical" data-id="0.6">
-      <label class="tick"><input type="checkbox" data-key="0.6"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.6</span>
-          <h3>Keep the two discrepancy warnings — they are the "check"</h3>
-          <span class="chip chip-critical">critical</span>
-          <span class="chip chip-form">Screening</span>
-        </div>
-        <p class="path">Designer → Screening and Eligibility → <code>w_age_check</code> and <code>w_bmi_check</code> (§4.1, §4.2)</p>
-        <p>Pre-filling handles the honest mistake. These handle the override, the late correction to Demographics, and anything arriving by data import — none of which <code>@DEFAULT</code> touches. <strong>Do not drop them because the field is now pre-filled.</strong> They are the literal thing the assignment asks you to demonstrate.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">w_bmi_check · branching logic</span><button class="copy">Copy</button></div>
-          <pre>([bmi_above_35] = '0' and [bmi] &lt;&gt; "" and [bmi] &gt; 35)
-or ([bmi_above_35] = '1' and [bmi] &lt;&gt; "" and [bmi] &lt;= 35)</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">w_age_check · branching logic</span><button class="copy">Copy</button></div>
-          <pre>([age_18_or_older] = '1' and [age] &lt;&gt; "" and [age] &lt; 18)
-or ([age_18_or_older] = '0' and [age] &lt;&gt; "" and [age] &gt;= 18)</pre>
-        </div>
-        <div class="note">
-          <span class="nlabel">The behaviour worth defending</span>
-          If someone fixes a weight typo on Demographics a week later, the stored <code>bmi_above_35</code> does <em>not</em> silently change — it is a collected value, a record of what was assessed at the time. What happens instead is that <code>w_bmi_check</code> starts firing and Data Quality rule 2 flags the record. That is the correct clinical behaviour: the disagreement becomes visible and gets resolved through a query, rather than being overwritten with no trace.
-        </div>
-      </div>
-    </article>
-
-    <article class="item" data-form="screening" data-prio="high" data-id="0.7">
-      <label class="tick"><input type="checkbox" data-key="0.7"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.7</span>
-          <h3>Show the expected decision next to <code>eligible</code> — but never fill it</h3>
-          <span class="chip chip-high">high</span>
-          <span class="chip chip-form">Screening</span>
-        </div>
-        <p class="path">Designer → Screening and Eligibility → one calc field + two descriptive fields, after <code>eligible</code></p>
-        <p>Extending the same idea to the overall decision, without crossing the line: the form computes what the six criteria imply and <em>says</em> it, and the investigator still records the actual decision. This keeps the P003 case recordable while removing the arithmetic burden.</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">elig_calc — calculated field, @HIDDEN-PDF</span><button class="copy">Copy</button></div>
-          <pre>if([generally_healthy] = '1' and [age_18_or_older] = '1' and [icf_signed] = '1'
-   and [previous_ebola_trial] = '0' and [previous_mpox_vaccination] = '0'
-   and [bmi_above_35] = '0', 1, 0)</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">elig_hint_yes — descriptive · branching</span><button class="copy">Copy</button></div>
-          <pre>[elig_calc] = '1'</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">elig_hint_yes — label (HTML)</span><button class="copy">Copy</button></div>
-          <pre>&lt;div style="color:#2A6B4A;padding:8px;border:1px solid #2A6B4A;border-radius:4px;"&gt;
-All six criteria as recorded above are satisfied. The expected enrolment decision is &lt;b&gt;Yes&lt;/b&gt;.
-&lt;/div&gt;</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">elig_hint_no — descriptive · branching</span><button class="copy">Copy</button></div>
-          <pre>[elig_calc] = '0'</pre>
-        </div>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">elig_hint_no — label (HTML)</span><button class="copy">Copy</button></div>
-          <pre>&lt;div style="color:#8A5800;padding:8px;border:1px solid #8A5800;border-radius:4px;"&gt;
-At least one criterion above is not satisfied. The expected enrolment decision is &lt;b&gt;No&lt;/b&gt;. If the participant is being enrolled regardless, complete the Protocol Deviations form.
-&lt;/div&gt;</pre>
-        </div>
-        <p>Then keep <code>w_eligible</code> (§4.3) below these as the hard discrepancy warning.</p>
-      </div>
-    </article>
-
-    <article class="item" data-form="project" data-prio="med" data-id="0.8">
-      <label class="tick"><input type="checkbox" data-key="0.8"><span></span></label>
-      <div class="ibody">
-        <div class="ihead">
-          <span class="num">0.8</span>
-          <h3>Add three lines to the build note</h3>
-          <span class="chip chip-med">polish</span>
-          <span class="chip chip-form">Submission</span>
-        </div>
-        <p class="path">§8.2 build note → section 2, "Derived versus collected"</p>
-        <div class="snip">
-          <div class="sniphead"><span class="sniplabel">Build note text</span><button class="copy">Copy</button></div>
-          <pre>The age and BMI eligibility criteria are pre-filled from the values calculated on the Demographics form (@DEFAULT seeded from hidden calculated flags), rather than being typed independently. They remain collected, editable fields: the specification requires Yes/No responses to be collected, and an override must stay possible so that a participant enrolled against criteria is recordable and the corresponding protocol deviation is triggered.
-
-Overriding a pre-filled value, or later correcting the Demographics measurements, raises an inline discrepancy warning and a Data Quality rule rather than silently rewriting the stored answer.
-
-The overall eligibility decision is deliberately not pre-filled. The form displays what the six recorded criteria imply, but the decision itself is the investigator's regulatory act and is recorded as entered.</pre>
-        </div>
-      </div>
-    </article>
-
-  </div>
-
-  <div class="sechead" style="border:none;padding-top:8px">
-    <span class="eyebrow">Design options considered</span>
-  </div>
-  <div class="grid2">
-    <div class="card">
-      <span class="verdict no">Rejected</span>
-      <h4>A — Pure calculation</h4>
-      <p><code>bmi_above_35</code> stays a calc field, no human input at all. Fails the "should collect Yes/No responses" requirement, leaves no warning to demonstrate, and makes an erroneous enrolment unrecordable.</p>
-    </div>
-    <div class="card pick">
-      <span class="verdict yes">Built</span>
-      <h4>B — Derive, pre-fill, warn</h4>
-      <p>Collected radio seeded by <code>@DEFAULT</code> from a hidden calculated flag, with the source number piped into the label and a discrepancy warning on the override. Satisfies both clauses of the requirement.</p>
-    </div>
-    <div class="card">
-      <span class="verdict no">Rejected</span>
-      <h4>C — Pre-fill and lock</h4>
-      <p>Pre-fill as in B, then add <code>@READONLY</code>. Removes the last-resort override, so a site facing a genuine measurement error has no path except a database change request. Too rigid for a live trial.</p>
-    </div>
-  </div>
-</section>
+<div id="formview"></div>
 
 <!-- ===================== §1 BREAKING FIXES ===================== -->
 <section class="sec" id="s-1" data-title="Six breaking fixes" data-n="1">
@@ -1319,7 +772,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
         <p class="path">Designer → Demographics → age → Calculation</p>
         <p>Current: <code>rounddown(datediff([dob], 'today', 'y'))</code>. REDCap warns against <code>today</code>/<code>now</code> inside calculations — the value only refreshes when the form is re-saved, so stored age drifts from displayed age and <strong>Data Quality Rule E flags every record permanently</strong>. Age in a trial means <em>age at enrolment</em>: a fixed fact.</p>
         <div class="snip"><div class="sniphead"><span class="sniplabel">Calculation</span><button class="copy">Copy</button></div><pre>rounddown(datediff([dob],[d1_date],"y"))</pre></div>
-        <p>Use <strong>Test this calculation</strong> before leaving the field. Step 0.2 depends on this being right.</p>
+        <p>Use <strong>Test this calculation</strong> before leaving the field.</p>
         <div class="note warn"><span class="nlabel">If your version rejects the argument order</span>Try <code>datediff([dob],[d1_date],"y","dmy",true)</code>.</div>
       </div>
     </article>
@@ -1339,7 +792,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
         <div class="ihead"><span class="num">1.3</span><h3><code>bmi_above_35</code> calculation is invalid syntax</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
         <p class="path">Designer → Screening and Eligibility → bmi_above_35</p>
         <p>Current: <code>if([bmi]&gt;35,0="Yes",1="No")</code>. <code>if()</code> takes <code>if(condition, value_if_true, value_if_false)</code> — equals-signs inside the arguments are not syntax, and a <code>calc</code> field returns numbers only.</p>
-        <p><strong>Fix:</strong> change the field type to <strong>radio</strong>, choices <code>1, Yes | 0, No</code>, delete the calculation — then apply steps 0.3 and 0.4 so it arrives pre-filled instead of empty.</p>
+        <p><strong>Fix:</strong> change the field type to <strong>radio</strong>, choices <code>1, Yes | 0, No</code>, delete the calculation. It is being converted to a collected radio in §3.3 anyway.</p>
       </div>
     </article>
 
@@ -1348,7 +801,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
       <div class="ibody">
         <div class="ihead"><span class="num">1.4</span><h3><code>eligible</code> sums text values</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
         <p class="path">Designer → Screening and Eligibility → eligible</p>
-        <p>Two of the six operands return strings, and you cannot add strings. A blank form also evaluates to "No" rather than blank. <strong>Fix:</strong> convert to a collected radio (§3.3), with the derived hint from step 0.7 beside it.</p>
+        <p>Two of the six operands return strings, and you cannot add strings. A blank form also evaluates to "No" rather than blank. <strong>Fix:</strong> converted to a collected radio with a discrepancy warning in §3.3.</p>
       </div>
     </article>
 
@@ -1476,7 +929,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
   <div class="sechead">
     <span class="eyebrow">Section 3 · 90 minutes · partially skippable</span>
     <h2>Form-by-form remediation</h2>
-    <p>One card per instrument. Section 0 already covers the Screening rebuild — this is everything else.</p>
+    <p>One card per instrument. §3.3 is the highest-value one — leave time for it.</p>
   </div>
   <div class="items">
 
@@ -1496,8 +949,8 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
           <tr><td><code>bmi</code></td><td>Label → <code>BMI (kg/m²)</code>; keep the calculation — it is correct</td></tr>
         </table></div>
         <div class="note crit">
-          <span class="nlabel">Decimal convention — fix this before Section 0</span>
-          <code>height</code> uses <code>number</code> (period) and <code>weight</code> uses <code>number_comma_decimal</code> (comma). Mixed conventions feeding the same calculation is a real hazard, and everything in Section 0 is downstream of <code>[bmi]</code> being right. Standardise on <code>number</code>.
+          <span class="nlabel">Decimal convention</span>
+          <code>height</code> uses <code>number</code> (period) and <code>weight</code> uses <code>number_comma_decimal</code> (comma). Mixed conventions feeding the same calculation is a real hazard, and the BMI calculation and the §4.2 warning are both downstream of it. Standardise on <code>number</code>.
         </div>
         <div class="note">
           <span class="nlabel">Register</span>
@@ -1542,25 +995,22 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
       <label class="tick"><input type="checkbox" data-key="3.3"><span></span></label>
       <div class="ibody">
         <div class="ihead"><span class="num">3.3</span><h3>Screening — final field order</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
-        <p>Collect all six, derive nothing outright, pre-fill what is knowable, warn on disagreement. This is the layout after Section 0 is applied.</p>
+        <p>The assignment says the form <em>"should <strong>collect</strong> Yes/No responses"</em> for all six criteria, and asks for consistency to be enforced <em>"with an appropriate warning or check"</em>. The current build derives two criteria and the overall decision — so two criteria are never collected, the decision can never disagree with the criteria, and there is no check left to demonstrate. <strong>Restructure to: collect all six, derive nothing, warn on disagreement.</strong></p>
         <div class="tw"><table>
           <tr><th>#</th><th>Variable</th><th>Type</th><th>Choices</th><th>Req</th></tr>
-          <tr><td>1</td><td><code>w_demog_missing</code></td><td>descriptive</td><td>gate · step 0.5</td><td>—</td></tr>
           <tr><td colspan="5"><em>Section: Inclusion criteria</em> — <code>Answer Yes only if the criterion is met.</code></td></tr>
-          <tr><td>2</td><td><code>generally_healthy</code></td><td>yesno</td><td>—</td><td>y</td></tr>
-          <tr><td>3</td><td><code>age_18_or_older</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code> + <code>@DEFAULT</code></td><td>y</td></tr>
-          <tr><td>4</td><td><code>w_age_check</code></td><td>descriptive</td><td>warning 4.1</td><td>—</td></tr>
-          <tr><td>5</td><td><code>icf_signed</code></td><td>yesno</td><td>—</td><td>y</td></tr>
+          <tr><td>1</td><td><code>generally_healthy</code></td><td>yesno</td><td>—</td><td>y</td></tr>
+          <tr><td>2</td><td><code>age_18_or_older</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>3</td><td><code>w_age_check</code></td><td>descriptive</td><td>warning 4.1</td><td>—</td></tr>
+          <tr><td>4</td><td><code>icf_signed</code></td><td>yesno</td><td>—</td><td>y</td></tr>
           <tr><td colspan="5"><em>Section: Exclusion criteria</em> — <code>Answer Yes if the criterion is PRESENT. A Yes here excludes the participant.</code></td></tr>
-          <tr><td>6</td><td><code>previous_ebola_trial</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
-          <tr><td>7</td><td><code>previous_mpox_vaccination</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
-          <tr><td>8</td><td><code>bmi_above_35</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code> + <code>@DEFAULT</code></td><td>y</td></tr>
-          <tr><td>9</td><td><code>w_bmi_check</code></td><td>descriptive</td><td>warning 4.2</td><td>—</td></tr>
+          <tr><td>5</td><td><code>previous_ebola_trial</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
+          <tr><td>6</td><td><code>previous_mpox_vaccination</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
+          <tr><td>7</td><td><code>bmi_above_35</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>8</td><td><code>w_bmi_check</code></td><td>descriptive</td><td>warning 4.2</td><td>—</td></tr>
           <tr><td colspan="5"><em>Section: Eligibility assessment</em></td></tr>
-          <tr><td>10</td><td><code>eligible</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code> — <strong>no @DEFAULT</strong></td><td>y</td></tr>
-          <tr><td>11</td><td><code>elig_calc</code></td><td>calc</td><td>step 0.7</td><td>—</td></tr>
-          <tr><td>12</td><td><code>elig_hint_yes</code> · <code>elig_hint_no</code></td><td>descriptive</td><td>step 0.7</td><td>—</td></tr>
-          <tr><td>13</td><td><code>w_eligible</code></td><td>descriptive</td><td>warning 4.3</td><td>—</td></tr>
+          <tr><td>9</td><td><code>eligible</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>11</td><td><code>w_eligible</code></td><td>descriptive</td><td>warning 4.3</td><td>—</td></tr>
         </table></div>
         <div class="note crit">
           <span class="nlabel">Flip the exclusion coding</span>
@@ -1604,7 +1054,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
         </table></div>
         <div class="note crit">
           <span class="nlabel">No @TODAY or @NOW on any date or time field here</span>
-          In the Task 2 export, <code>Vaccination_Time</code> is <code>10:00</code> on 47 of 48 rows and <code>Collection_Time</code> is 09:00 / 09:10 / 09:15 on essentially every record — the signature of pre-filled defaults. Data that looks complete and is silently unverified is worse than data that looks incomplete. This is one of the strongest lines available to you. <strong>Note the contrast with Section 0:</strong> pre-filling a <em>derived</em> value the database already holds is verification; pre-filling an <em>observed</em> value the database cannot know is fabrication.
+          In the Task 2 export, <code>Vaccination_Time</code> is <code>10:00</code> on 47 of 48 rows and <code>Collection_Time</code> is 09:00 / 09:10 / 09:15 on essentially every record — the signature of pre-filled defaults. Data that looks complete and is silently unverified is worse than data that looks incomplete. Say this out loud if asked; it is one of the strongest lines available to you.
         </div>
       </div>
     </article>
@@ -1698,7 +1148,7 @@ The overall eligibility decision is deliberately not pre-filled. The form displa
         </table></div>
         <div class="note ok">
           <span class="nlabel">Keep the Apgar decomposition</span>
-          Five components × two timepoints with calculated totals is the best thing in your dictionary — clinically correct, and it removes the arithmetic error entirely. It is twelve fields where the spec asked for two, so be ready to justify it: <em>"the total is what the spec asked for, but a transcribed total cannot be verified against source, whereas the five components can."</em> Same argument as Section 0, applied to a different field.
+          Five components × two timepoints with calculated totals is the best thing in your dictionary — clinically correct, and it removes the arithmetic error entirely. It is twelve fields where the spec asked for two, so be ready to justify it: <em>"the total is what the spec asked for, but a transcribed total cannot be verified against source, whereas the five components can."</em>
         </div>
       </div>
     </article>
@@ -1875,7 +1325,7 @@ or
           <tr><td>11</td><td>Delivery recorded, not flagged pregnant</td><td>Delivery Data</td><td><code>[delivery_date] &lt;&gt; "" and [day_1_arm_1][pregnant] &lt;&gt; '1'</code></td></tr>
           <tr><td>12</td><td>Other method, no specification</td><td>Delivery Data</td><td><code>[delivery_method] = '4' and [specify_other] = ""</code></td></tr>
         </table></div>
-        <p>Enable <strong>real-time execution</strong> on rules 1–5 so discrepancies surface at entry rather than at the next review cycle. Rules 1 and 2 are the backstop for Section 0: they catch the case where Demographics is corrected after Screening was signed off.</p>
+        <p>Enable <strong>real-time execution</strong> on rules 1–5 so discrepancies surface at entry rather than at the next review cycle. The overlap with §4 is deliberate: the inline warning catches errors at entry, the DQ rule catches everything arriving by import, from a user who ignored the warning, or through a later edit.</p>
       </div>
     </article>
 
@@ -1898,17 +1348,12 @@ or
         <div class="tw"><table>
           <tr><th>Problem</th><th>Fix</th></tr>
           <tr><td>Warning fields print as red blocks and confuse a paper user</td><td><code>@HIDDEN-PDF</code> on every <code>w_*</code> descriptive field</td></tr>
-          <tr><td>Derived flags print as meaningless boxes</td><td><code>@HIDDEN-PDF</code> on <code>bmi_gt35_calc</code>, <code>age_ge18_calc</code>, <code>elig_calc</code></td></tr>
           <tr><td>Branching-hidden fields missing from the PDF</td><td>Turn on the setting to include branching-logic fields, otherwise the paper CRF has holes</td></tr>
           <tr><td>Calculated fields (<code>age</code>, <code>bmi</code>, Apgar totals) print as empty boxes with no explanation</td><td>Field note: <em>Calculated automatically in the database — leave blank on paper.</em></td></tr>
           <tr><td>Dropdowns may print as a blank line without their choices</td><td>Your only dropdown is <code>ae_severity</code> — switch it to radio if the choices don't print</td></tr>
           <tr><td>No room to write</td><td>Check <code>ae_term</code>, <code>dev_description</code>, <code>dev_corrective_action</code> — notes fields print a box, single-line text prints a line</td></tr>
           <tr><td>No completion header</td><td>Add a section header on Demographics: Participant ID, site, initials of the person completing, date completed</td></tr>
         </table></div>
-        <div class="note warn">
-          <span class="nlabel">One paper-specific consequence of Section 0</span>
-          On paper there is no <code>@DEFAULT</code>. The piped labels from step 0.4 print as <code>Age calculated from date of birth: ___ years</code>, which is exactly right — the person filling it in copies the number across from Form 1 by hand, and the database re-checks it on entry.
-        </div>
       </div>
     </article>
   </div>
@@ -1920,7 +1365,7 @@ or
   <div class="sechead">
     <span class="eyebrow">Section 7 · 30 minutes · not skippable</span>
     <h2>Test records</h2>
-    <p>Two records. This is how you prove the build works — including that the pre-fill fires and that it can still be overridden.</p>
+    <p>Two records. This is not optional — it is how you prove the build works, and it takes thirty minutes.</p>
   </div>
   <div class="items">
 
@@ -1930,7 +1375,7 @@ or
         <div class="ihead"><span class="num">7.1</span><h3>P001 — clean adult male</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Test data</span></div>
         <ul>
           <li>Day 1: full Demographics, one Medical History entry, Blood Sampling collected with barcode, Vaccination</li>
-          <li>Open Screening <strong>after</strong> saving Demographics and confirm <code>age_18_or_older</code> and <code>bmi_above_35</code> arrive <strong>already answered</strong> — this is the proof that step 0.3 works</li>
+          <li>Screening: all six criteria answered, participant eligible</li>
           <li>Day 28, Day 42: Blood Sampling; Vaccination at Day 28</li>
           <li>One non-serious AE</li>
           <li>Confirm the <strong>Delivery form is greyed out</strong> — this proves Form Display Logic works</li>
@@ -1944,8 +1389,7 @@ or
         <div class="ihead"><span class="num">7.2</span><h3>P002 — pregnant, deliberately inconsistent</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Test data</span></div>
         <ul>
           <li>Demographics: female, pregnant = Yes, height/weight giving <strong>BMI &gt; 35</strong></li>
-          <li>Screening: confirm <code>bmi_above_35</code> pre-fills to <strong>Yes</strong>, then <strong>deliberately change it to No</strong> → <code>w_bmi_check</code> must appear immediately</li>
-          <li>Set <code>eligible</code> = <strong>Yes</strong> → <code>w_eligible</code> must also fire, and <code>elig_hint_no</code> must be showing</li>
+          <li>Screening: <code>bmi_above_35</code> = <strong>No</strong>, <code>eligible</code> = <strong>Yes</strong> → <code>w_bmi_check</code> and <code>w_eligible</code> must both fire</li>
           <li>Save anyway — it must save, because an erroneous enrolment has to be recordable</li>
           <li><strong>Three</strong> Medical History entries → proves repeating</li>
           <li><strong>Two</strong> AEs, one serious, aware 18 June, reported to sponsor 22 June → <code>w_sae_timing</code> must fire</li>
@@ -1958,21 +1402,7 @@ or
     <article class="item" data-form="project" data-prio="high" data-id="7.3">
       <label class="tick"><input type="checkbox" data-key="7.3"><span></span></label>
       <div class="ibody">
-        <div class="ihead"><span class="num">7.3</span><h3>P003 — the blank-Demographics case</h3><span class="chip chip-high">high</span><span class="chip chip-form">Test data</span></div>
-        <p>Two minutes, and it demonstrates the one caveat in the design. Create a record and open <strong>Screening first</strong>, before touching Demographics.</p>
-        <ul>
-          <li><code>w_demog_missing</code> must be showing at the top of the form</li>
-          <li>Both criteria must be <strong>blank</strong>, not pre-filled with a guess</li>
-          <li>Now complete Demographics, return to Screening — the pre-fill takes effect on this fresh load</li>
-        </ul>
-        <div class="note ok"><span class="nlabel">Why bother</span>If a reviewer asks "what happens if the forms are completed out of order?", you have already tested it and the answer is on screen. That is a much better position than reasoning about it live.</div>
-      </div>
-    </article>
-
-    <article class="item" data-form="project" data-prio="high" data-id="7.4">
-      <label class="tick"><input type="checkbox" data-key="7.4"><span></span></label>
-      <div class="ibody">
-        <div class="ihead"><span class="num">7.4</span><h3>Run all Data Quality rules, leave one query open</h3><span class="chip chip-high">high</span><span class="chip chip-form">Test data</span></div>
+        <div class="ihead"><span class="num">7.3</span><h3>Run all Data Quality rules, leave one query open</h3><span class="chip chip-high">high</span><span class="chip chip-form">Test data</span></div>
         <p>Data Quality → <strong>Run all rules</strong> and confirm the discrepancies appear — rules 2 and 3 should both fire on P002. Then open <strong>one query through the Data Resolution Workflow and leave it open</strong>. The reviewers see the query mechanism working live rather than taking your word for it.</p>
       </div>
     </article>
@@ -2018,8 +1448,8 @@ or
         <p>It converts design decisions a reviewer might miss into decisions they can see you made deliberately.</p>
         <ol style="margin:0;padding-left:20px;color:var(--ink-2);display:flex;flex-direction:column;gap:7px">
           <li><strong>Structure.</strong> Single arm, six events: three scheduled visits, Delivery, and two unscheduled events for AEs and PDs. AEs and PDs are participant-level rather than visit-bound, giving one chronological register per participant. Delivery is restricted via Form Display Logic on <code>[day_1_arm_1][pregnant]</code>.</li>
-          <li><strong>Derived versus collected.</strong> Paste the three paragraphs from step 0.8 here.</li>
-          <li><strong>No default dates or times.</strong> Deliberately no <code>@TODAY</code> / <code>@NOW</code> on collection dates and times. Pre-filled timestamps produce data that appears complete and is silently unverified. Contrast with the derived criteria, where the database is copying a value it already holds rather than inventing one it does not.</li>
+          <li><strong>Derived versus collected.</strong> Age and BMI are calculated to remove a class of transcription error at source. All six eligibility criteria and the overall decision are <strong>collected</strong>, with derived values used only to trigger discrepancy warnings — because the investigator's enrolment decision is a regulatory record, and auto-deriving it would make an erroneous enrolment unrecordable.</li>
+          <li><strong>No default dates or times.</strong> Deliberately no <code>@TODAY</code> / <code>@NOW</code> on collection dates and times. Pre-filled timestamps produce data that appears complete and is silently unverified.</li>
           <li><strong>Two-layer data quality.</strong> Inline warnings at entry, Data Quality rules as the backstop for imported or later-edited data. Query management via the Data Resolution Workflow with role-differentiated rights.</li>
           <li><strong>Deliberate deviations.</strong> <code>sae_type</code> is a checkbox rather than a single selection, because an SAE can meet several criteria at once. Apgar is captured as five components per timepoint with a calculated total, because a transcribed total cannot be verified against source.</li>
           <li><strong>Observations on the specification.</strong> Two gaps, raised rather than silently filled: no confirmation of pregnancy or gestational age is collected anywhere, yet the Delivery form asks for pre-term / term / post-term — unverifiable at analysis; and no informed consent <em>date</em> is collected, only a Yes/No, so the database cannot evidence that consent preceded any study procedure.</li>
@@ -2046,11 +1476,6 @@ or
   <div class="sechead">
     <span class="eyebrow">Section 9 · read it, don't tick it</span>
     <h2>Four challenges, with the answer prepared</h2>
-  </div>
-
-  <div class="qa">
-    <span class="q">"You pre-filled a field the specification told you to collect. Isn't that the same as calculating it?"</span>
-    <p class="a">No — and the distinction is the reason the requirement has two clauses. The value is stored as a collected response, it is editable, it appears in the audit trail as a user entry, and it can disagree with the derived value. What the pre-fill removes is the transcription step, which is where the error in the Task 2 data actually came from. What it keeps is the human confirmation and the ability to override, which is what makes an erroneous enrolment recordable and the protocol deviation traceable.</p>
   </div>
 
   <div class="qa">
@@ -2106,24 +1531,12 @@ or
     <div class="card">
       <h4>Action tags</h4>
       <div class="tw"><table style="min-width:0">
-        <tr><td><code>@DEFAULT</code></td><td><code>age_18_or_older</code>, <code>bmi_above_35</code> — seeded from derived flags</td></tr>
         <tr><td><code>@BARCODE-APP</code></td><td><code>sample_barcode</code></td></tr>
-        <tr><td><code>@HIDDEN-PDF</code></td><td>every <code>w_*</code> field and every <code>*_calc</code> flag</td></tr>
+        <tr><td><code>@HIDDEN-PDF</code></td><td>every <code>w_*</code> descriptive field</td></tr>
         <tr><td><code>@TODAY</code> / <code>@NOW</code></td><td><strong>deliberately not used</strong></td></tr>
       </table></div>
     </div>
 
-    <div class="card">
-      <h4>New fields added by Section 0</h4>
-      <div class="tw"><table style="min-width:0">
-        <tr><td><code>bmi_gt35_calc</code></td><td>calc · Demographics</td></tr>
-        <tr><td><code>age_ge18_calc</code></td><td>calc · Demographics</td></tr>
-        <tr><td><code>w_demog_missing</code></td><td>descriptive · Screening</td></tr>
-        <tr><td><code>elig_calc</code></td><td>calc · Screening</td></tr>
-        <tr><td><code>elig_hint_yes</code></td><td>descriptive · Screening</td></tr>
-        <tr><td><code>elig_hint_no</code></td><td>descriptive · Screening</td></tr>
-      </table></div>
-    </div>
   </div>
 </section>
 
@@ -2228,6 +1641,14 @@ or
       var vis = sec.querySelectorAll(".item:not(.hide)").length;
       sec.classList.toggle("allhidden", vis === 0);
     });
+    document.querySelectorAll(".fgroup").forEach(function(g){
+      var all = g.querySelectorAll(".item");
+      var vis = g.querySelectorAll(".item:not(.hide)").length;
+      g.classList.toggle("allhidden", all.length === 0 || vis === 0);
+      var done = 0;
+      all.forEach(function(it){ if (it.classList.contains("done")) done++; });
+      g.querySelector(".fgcount").textContent = all.length ? done + "/" + all.length + " done" : "";
+    });
   }
 
   function bindFilter(container, set, attr){
@@ -2247,6 +1668,56 @@ or
   hd.addEventListener("click", function(){
     hideDone = !hideDone;
     hd.setAttribute("aria-pressed", String(hideDone));
+    applyFilters();
+  });
+
+  /* ---------- group-by-instrument view ---------- */
+  var FORMS = [
+    ["demographics", "Demographics", "Designer → Demographics"],
+    ["medhist",      "Medical History", "Designer → Medical History"],
+    ["screening",    "Screening &amp; Eligibility", "Designer → Screening and Eligibility"],
+    ["blood",        "Blood Sampling", "Designer → Blood Sampling"],
+    ["vaccination",  "Vaccination", "Designer → Vaccination"],
+    ["ae",           "Adverse Events", "Designer → Adverse Events"],
+    ["pd",           "Protocol Deviations", "Designer → Protocol Deviations"],
+    ["delivery",     "Delivery Data", "Designer → Delivery Data"],
+    ["project",      "Project-level &amp; deliverables", "Project Setup · Data Quality · submission"]
+  ];
+  var formview = document.getElementById("formview");
+  var home = new Map();               /* item -> [parent, nextSibling] */
+  items.forEach(function(it){ home.set(it, [it.parentNode, it.nextSibling]); });
+
+  FORMS.forEach(function(f){
+    var g = document.createElement("section");
+    g.className = "fgroup";
+    g.dataset.form = f[0];
+    g.innerHTML =
+      '<div class="fghead"><h2>' + f[1] + '</h2>' +
+      '<span class="fgwhere">' + f[2] + '</span>' +
+      '<span class="fgcount"></span></div>' +
+      '<div class="items"></div>';
+    formview.appendChild(g);
+  });
+
+  var groupOn = false;
+  var bf = document.getElementById("byform");
+  bf.addEventListener("click", function(){
+    groupOn = !groupOn;
+    bf.setAttribute("aria-pressed", String(groupOn));
+    document.body.classList.toggle("byform", groupOn);
+    if (groupOn){
+      FORMS.forEach(function(f){
+        var box = formview.querySelector('.fgroup[data-form="' + f[0] + '"] .items');
+        items.filter(function(it){ return it.dataset.form === f[0]; })
+             .forEach(function(it){ box.appendChild(it); });
+      });
+    } else {
+      /* restore original document order, back to front so nextSibling holds */
+      items.slice().reverse().forEach(function(it){
+        var h = home.get(it);
+        h[0].insertBefore(it, h[1]);
+      });
+    }
     applyFilters();
   });
 
@@ -2295,170 +1766,7 @@ or
     }
   });
 
-  /* ================= SIMULATOR ================= */
-  var el = function(id){ return document.getElementById(id); };
-  var ih = el("i-h"), iw = el("i-w"), idob = el("i-dob"), id1 = el("i-d1");
-
-  var answers = { age18:null, bmi35:null, healthy:"1", icf:"1", ebola:"0", mpox:"0", elig:null };
-  var touched = { age18:false, bmi35:false };
-
-  function num(input){
-    var v = parseFloat(input.value);
-    return (input.value === "" || isNaN(v)) ? null : v;
-  }
-
-  function calcBmi(){
-    var h = num(ih), w = num(iw);
-    if (h === null || w === null || h <= 0) return null;
-    return Math.round((w / Math.pow(h / 100, 2)) * 10) / 10;
-  }
-
-  function calcAge(){
-    if (!idob.value || !id1.value) return null;
-    var b = new Date(idob.value + "T00:00:00"), d = new Date(id1.value + "T00:00:00");
-    if (isNaN(b) || isNaN(d) || d < b) return null;
-    var a = d.getFullYear() - b.getFullYear();
-    var m = d.getMonth() - b.getMonth();
-    if (m < 0 || (m === 0 && d.getDate() < b.getDate())) a--;
-    return a;
-  }
-
-  function setYN(qk, val){
-    var wrap = document.querySelector('.yn[data-q="' + qk + '"]');
-    if (!wrap) return;
-    wrap.querySelectorAll("button").forEach(function(b){
-      b.setAttribute("aria-pressed", String(b.dataset.v === val));
-    });
-  }
-
-  function alertHtml(kind, name, body){
-    var icon = kind === "good" ? "✓" : "⚠";
-    return '<div class="alert ' + (kind === "red" ? "" : kind) + '">' +
-             '<span class="aicon">' + icon + '</span>' +
-             '<span class="abody"><span class="aname">' + name + '</span>' + body + '</span>' +
-           '</div>';
-  }
-
-  function render(){
-    var bmi = calcBmi(), age = calcAge();
-    var bmiFlag = bmi === null ? null : (bmi > 35 ? "1" : "0");
-    var ageFlag = age === null ? null : (age >= 18 ? "1" : "0");
-
-    el("o-bmi").textContent = bmi === null ? "blank" : bmi.toFixed(1);
-    el("o-bmi").className = "dv" + (bmi === null ? " blank" : (bmi > 35 ? " hi" : ""));
-    el("o-bmiflag").textContent = bmiFlag === null ? "blank" : bmiFlag;
-    el("o-bmiflag").className = "dv" + (bmiFlag === null ? " blank" : (bmiFlag === "1" ? " hi" : ""));
-    el("o-age").textContent = age === null ? "blank" : age;
-    el("o-age").className = "dv" + (age === null ? " blank" : (age < 18 ? " hi" : ""));
-    el("o-ageflag").textContent = ageFlag === null ? "blank" : ageFlag;
-    el("o-ageflag").className = "dv" + (ageFlag === null ? " blank" : (ageFlag === "0" ? " hi" : ""));
-
-    el("q-agepipe").textContent = age === null ? "" : "Age: " + age + " years";
-    el("q-bmipipe").textContent = bmi === null ? "" : "BMI: " + bmi.toFixed(1) + " kg/m²";
-
-    /* @DEFAULT: seeds only an untouched field */
-    if (!touched.age18) answers.age18 = ageFlag;
-    if (!touched.bmi35) answers.bmi35 = bmiFlag;
-    setYN("age18", answers.age18);
-    setYN("bmi35", answers.bmi35);
-    setYN("elig", answers.elig);
-
-    function preTag(id, val, flag, was){
-      var n = el(id);
-      if (flag === null){ n.textContent = ""; return; }
-      if (!was){ n.textContent = "pre-filled"; n.classList.remove("gone"); }
-      else if (val === flag){ n.textContent = "matches derived"; n.classList.remove("gone"); }
-      else { n.textContent = "overridden"; n.classList.add("gone"); }
-    }
-    preTag("pre-age18", answers.age18, ageFlag, touched.age18);
-    preTag("pre-bmi35", answers.bmi35, bmiFlag, touched.bmi35);
-
-    /* top alerts */
-    var top = "";
-    if (bmi === null || age === null){
-      top += alertHtml("amber", "w_demog_missing",
-        "Demographics is not complete for this participant. The age and BMI criteria below cannot be pre-filled or checked against source until height, weight and date of birth are entered on Form 1. Complete Demographics first.");
-    }
-    el("a-top").innerHTML = top;
-
-    /* discrepancy alerts */
-    var bot = "";
-    if (age !== null && answers.age18 === "1" && age < 18)
-      bot += alertHtml("red", "w_age_check", "The age criterion does not agree with the age calculated from date of birth (" + age + " years). Verify against source before saving.");
-    if (age !== null && answers.age18 === "0" && age >= 18)
-      bot += alertHtml("red", "w_age_check", "The age criterion does not agree with the age calculated from date of birth (" + age + " years). Verify against source before saving.");
-    if (bmi !== null && answers.bmi35 === "0" && bmi > 35)
-      bot += alertHtml("red", "w_bmi_check", "The BMI criterion does not agree with the BMI calculated from height and weight (" + bmi.toFixed(1) + " kg/m²). Verify measurements and criterion before saving.");
-    if (bmi !== null && answers.bmi35 === "1" && bmi <= 35)
-      bot += alertHtml("red", "w_bmi_check", "The BMI criterion does not agree with the BMI calculated from height and weight (" + bmi.toFixed(1) + " kg/m²). Verify measurements and criterion before saving.");
-
-    /* elig_calc + hints */
-    var known = answers.age18 !== null && answers.bmi35 !== null;
-    var eligCalc = null;
-    if (known){
-      eligCalc = (answers.healthy === "1" && answers.age18 === "1" && answers.icf === "1" &&
-                  answers.ebola === "0" && answers.mpox === "0" && answers.bmi35 === "0") ? "1" : "0";
-      if (eligCalc === "1")
-        bot += alertHtml("good", "elig_hint_yes", "All six criteria as recorded above are satisfied. The expected enrolment decision is <b>Yes</b>.");
-      else
-        bot += alertHtml("amber", "elig_hint_no", "At least one criterion above is not satisfied. The expected enrolment decision is <b>No</b>. If the participant is being enrolled regardless, complete the Protocol Deviations form.");
-    }
-
-    if (answers.elig !== null && eligCalc !== null && answers.elig !== eligCalc){
-      bot += alertHtml("red", "w_eligible", "The overall eligibility decision does not agree with the individual criteria recorded above. If the participant is being enrolled regardless, a protocol deviation must be documented.");
-      bot += alertHtml("red", "Data Quality rule 3 · fires at review", "<code style=\"background:none;border:none;padding:0;color:inherit\">[eligible] = '1' and (… or [bmi_above_35] = '1' …)</code> — this record appears in Resolve Issues even if the warning above was ignored at entry.");
-    }
-    el("a-bot").innerHTML = bot;
-  }
-
-  [ih, iw, idob, id1].forEach(function(n){ n.addEventListener("input", render); });
-
-  document.querySelectorAll(".yn").forEach(function(wrap){
-    wrap.addEventListener("click", function(e){
-      var b = e.target.closest("button");
-      if (!b) return;
-      var k = wrap.dataset.q;
-      answers[k] = b.dataset.v;
-      if (k === "age18" || k === "bmi35") touched[k] = true;
-      wrap.querySelectorAll("button").forEach(function(x){
-        x.setAttribute("aria-pressed", String(x === b));
-      });
-      render();
-    });
-  });
-
-  var PRESETS = {
-    p003:  { h:172, w:108, dob:"1994-03-14", d1:"2026-08-17", reset:true, then:function(){ touched.bmi35 = true; answers.bmi35 = "0"; answers.elig = "1"; } },
-    clean: { h:178, w:74,  dob:"1991-06-02", d1:"2026-08-17", reset:true, then:function(){ answers.elig = "1"; } },
-    blank: { h:"",  w:"",  dob:"",           d1:"2026-08-17", reset:true, then:null },
-    edge:  { h:170, w:101.2, dob:"1990-01-20", d1:"2026-08-17", reset:true, then:null }
-  };
-
-  document.querySelectorAll("[data-preset]").forEach(function(b){
-    b.addEventListener("click", function(){
-      var p = PRESETS[b.dataset.preset];
-      ih.value = p.h; iw.value = p.w; idob.value = p.dob; id1.value = p.d1;
-      if (p.reset){
-        touched.age18 = false; touched.bmi35 = false;
-        answers.age18 = null; answers.bmi35 = null; answers.elig = null;
-        answers.healthy = "1"; answers.icf = "1"; answers.ebola = "0"; answers.mpox = "0";
-        setYN("healthy","1"); setYN("icf","1"); setYN("ebola","0"); setYN("mpox","0");
-      }
-      render();
-      if (p.then){ p.then(); render(); }
-    });
-  });
-
   paintProgress();
   applyFilters();
-
-  /* Open on the P003 state: BMI is 36.5, the site answered "No" anyway.
-     Everything else is self-consistent, so w_eligible stays silent and the
-     derived BMI check is the only thing that catches it. */
-  render();
-  touched.bmi35 = true;
-  answers.bmi35 = "0";
-  answers.elig = "1";
-  render();
 })();
 </script>
