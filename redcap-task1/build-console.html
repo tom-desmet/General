@@ -1,0 +1,1772 @@
+<title>REDCap Build Console</title>
+<style>
+/* ============================================================
+   TOKENS — light is the bare :root, dark redefined twice
+   ============================================================ */
+:root{
+  --ground:#F3F6F6;
+  --surface:#FFFFFF;
+  --surface-2:#E9EFEF;
+  --surface-3:#DFE8E8;
+  --line:#D3DEDE;
+  --line-2:#B6C5C5;
+  --ink:#111C1E;
+  --ink-2:#4C5C5E;
+  --ink-3:#6E7E80;
+  --accent:#0A5F73;
+  --accent-2:#0E7A93;
+  --accent-soft:#E2EFF3;
+  --crit:#A32316;
+  --crit-soft:#FBE9E6;
+  --crit-line:#E9BDB6;
+  --warn:#8A5800;
+  --warn-soft:#FBF1DF;
+  --warn-line:#E7D3AA;
+  --ok:#2A6B4A;
+  --ok-soft:#E4F1E9;
+  --ok-line:#B7D8C6;
+  --shadow:0 1px 2px rgba(17,28,30,.05), 0 8px 24px -16px rgba(17,28,30,.28);
+  --shadow-sm:0 1px 2px rgba(17,28,30,.06);
+
+  --mono:ui-monospace,"SF Mono","SFMono-Regular","Cascadia Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+
+  --f-xs:11.5px; --f-sm:13px; --f-base:15px; --f-md:16.5px;
+  --f-lg:20px; --f-xl:26px; --f-2xl:33px;
+
+  --rail:264px;
+  --r:6px;
+
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0E1416;
+    --surface:#161E20;
+    --surface-2:#1E282A;
+    --surface-3:#263234;
+    --line:#2A3639;
+    --line-2:#3C4B4E;
+    --ink:#E3EAEA;
+    --ink-2:#A3B2B3;
+    --ink-3:#7B8A8C;
+    --accent:#4FB3CC;
+    --accent-2:#7BCBDF;
+    --accent-soft:#12333D;
+    --crit:#F09287;
+    --crit-soft:#3A1A16;
+    --crit-line:#5C2B24;
+    --warn:#E0B25C;
+    --warn-soft:#33260E;
+    --warn-line:#4E3B18;
+    --ok:#7ECBA0;
+    --ok-soft:#153021;
+    --ok-line:#27523A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0E1416;
+  --surface:#161E20;
+  --surface-2:#1E282A;
+  --surface-3:#263234;
+  --line:#2A3639;
+  --line-2:#3C4B4E;
+  --ink:#E3EAEA;
+  --ink-2:#A3B2B3;
+  --ink-3:#7B8A8C;
+  --accent:#4FB3CC;
+  --accent-2:#7BCBDF;
+  --accent-soft:#12333D;
+  --crit:#F09287;
+  --crit-soft:#3A1A16;
+  --crit-line:#5C2B24;
+  --warn:#E0B25C;
+  --warn-soft:#33260E;
+  --warn-line:#4E3B18;
+  --ok:#7ECBA0;
+  --ok-soft:#153021;
+  --ok-line:#27523A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:var(--f-base);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:3px}
+
+/* ============================================================
+   SHELL
+   ============================================================ */
+.shell{
+  display:grid;
+  grid-template-columns:var(--rail) minmax(0,1fr);
+  gap:0;
+  max-width:1320px;
+  margin:0 auto;
+  align-items:start;
+}
+.rail{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  border-right:1px solid var(--line);
+  background:var(--surface);
+  padding:22px 18px 40px;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+.main{
+  min-width:0;
+  padding:34px 40px 120px;
+  display:flex;
+  flex-direction:column;
+  gap:56px;
+}
+
+/* ============================================================
+   RAIL PARTS
+   ============================================================ */
+.brand{display:flex;flex-direction:column;gap:3px}
+.brand .mark{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:600;
+}
+.brand h1{
+  font-family:var(--mono);
+  font-size:var(--f-md);
+  font-weight:600;
+  letter-spacing:-.02em;
+  margin:0;
+  line-height:1.25;
+}
+.brand .sub{
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  font-family:var(--mono);
+  letter-spacing:.02em;
+}
+
+.progress{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  background:var(--surface-2);
+}
+.ring{width:52px;height:52px;flex:none;display:block}
+.ring circle{fill:none;stroke-width:5}
+.ring .track{stroke:var(--line-2);opacity:.5}
+.ring .bar{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .45s cubic-bezier(.2,.8,.3,1)}
+.progress .pnum{
+  font-family:var(--mono);
+  font-size:var(--f-lg);
+  font-weight:600;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;
+}
+.progress .plabel{font-size:var(--f-xs);color:var(--ink-3);font-family:var(--mono);letter-spacing:.02em}
+
+.rail h2{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:600;
+  margin:0 0 9px;
+}
+.railgroup{display:flex;flex-direction:column}
+
+.jump{display:flex;flex-direction:column;gap:1px}
+.jump a{
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+  padding:5px 8px;
+  border-radius:4px;
+  text-decoration:none;
+  color:var(--ink-2);
+  font-size:var(--f-sm);
+  line-height:1.35;
+  border-left:2px solid transparent;
+}
+.jump a .jn{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+  flex:none;
+  width:1.4em;
+}
+.jump a:hover{background:var(--surface-2);color:var(--ink)}
+.jump a.on{
+  background:var(--accent-soft);
+  color:var(--accent);
+  border-left-color:var(--accent);
+  font-weight:600;
+}
+.jump a.on .jn{color:var(--accent)}
+.jump a .jdone{
+  margin-left:auto;
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+
+.filters{display:flex;flex-wrap:wrap;gap:5px}
+.fbtn{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  letter-spacing:.02em;
+  padding:4px 8px;
+  border:1px solid var(--line-2);
+  background:var(--surface);
+  color:var(--ink-2);
+  border-radius:100px;
+  cursor:pointer;
+  line-height:1.5;
+}
+.fbtn:hover{border-color:var(--accent);color:var(--accent)}
+.fbtn[aria-pressed="true"]{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:var(--surface);
+  font-weight:600;
+}
+:root[data-theme="dark"] .fbtn[aria-pressed="true"],
+:root:not([data-theme="light"]) .fbtn[aria-pressed="true"]{color:var(--ground)}
+
+.search{
+  width:100%;
+  font-family:var(--mono);
+  font-size:var(--f-sm);
+  padding:7px 9px;
+  border:1px solid var(--line-2);
+  border-radius:var(--r);
+  background:var(--surface);
+  color:var(--ink);
+}
+.search::placeholder{color:var(--ink-3)}
+
+.railfoot{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.linkbtn{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  background:none;
+  border:none;
+  padding:0;
+  cursor:pointer;
+  text-align:left;
+  letter-spacing:.02em;
+}
+.linkbtn:hover{color:var(--crit)}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.sec{scroll-margin-top:24px;display:flex;flex-direction:column;gap:20px}
+.sechead{display:flex;flex-direction:column;gap:7px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.sechead .eyebrow{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:600;
+}
+.sechead h2{
+  font-family:var(--mono);
+  font-size:var(--f-xl);
+  font-weight:600;
+  letter-spacing:-.03em;
+  margin:0;
+  line-height:1.15;
+  text-wrap:balance;
+}
+.sechead p{margin:0;color:var(--ink-2);max-width:66ch;font-size:var(--f-base)}
+
+/* ============================================================
+   HERO / MASTHEAD
+   ============================================================ */
+.masthead{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  padding-bottom:8px;
+}
+.masthead .kicker{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.masthead .kicker b{color:var(--crit);font-weight:600}
+.masthead h1{
+  font-family:var(--mono);
+  font-size:var(--f-2xl);
+  font-weight:600;
+  letter-spacing:-.04em;
+  line-height:1.1;
+  margin:0;
+  max-width:20ch;
+  text-wrap:balance;
+}
+.masthead .lede{
+  margin:0;
+  max-width:68ch;
+  color:var(--ink-2);
+  font-size:var(--f-md);
+  line-height:1.62;
+}
+.masthead .lede strong{color:var(--ink);font-weight:600}
+
+/* ============================================================
+   ITEMS
+   ============================================================ */
+.items{display:flex;flex-direction:column;gap:12px}
+.item{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:14px;
+  padding:15px 17px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow:var(--shadow-sm);
+  transition:opacity .2s, border-color .2s;
+}
+.item.done{opacity:.5}
+.item.done .ihead h3{text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.item.hide{display:none}
+
+.tick{position:relative;flex:none;padding-top:1px;cursor:pointer;display:block;width:19px;height:19px}
+.tick input{position:absolute;opacity:0;width:19px;height:19px;margin:0;cursor:pointer}
+.tick span{
+  display:block;width:19px;height:19px;
+  border:1.5px solid var(--line-2);
+  border-radius:4px;
+  background:var(--surface);
+  pointer-events:none;
+  transition:.15s;
+}
+.tick span::after{
+  content:"";position:absolute;left:6px;top:2.5px;
+  width:5px;height:10px;
+  border:solid var(--surface);
+  border-width:0 2px 2px 0;
+  transform:rotate(43deg) scale(0);
+  transition:transform .15s cubic-bezier(.3,1.6,.5,1);
+}
+.tick input:checked + span{background:var(--accent);border-color:var(--accent)}
+.tick input:checked + span::after{transform:rotate(43deg) scale(1)}
+:root[data-theme="dark"] .tick span::after,
+:root:not([data-theme="light"]) .tick span::after{border-color:var(--ground)}
+.tick input:focus-visible + span{outline:2px solid var(--accent-2);outline-offset:2px}
+
+.ibody{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ihead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.ihead .num{
+  font-family:var(--mono);
+  font-size:var(--f-sm);
+  color:var(--accent);
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.01em;
+}
+.ihead h3{
+  font-family:var(--mono);
+  font-size:var(--f-base);
+  font-weight:600;
+  margin:0;
+  letter-spacing:-.02em;
+  line-height:1.35;
+}
+.ihead h3 code{font-size:1em;background:none;padding:0;border:none;color:inherit}
+
+.chip{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  padding:2px 6px;
+  border-radius:3px;
+  font-weight:600;
+  white-space:nowrap;
+  line-height:1.6;
+  border:1px solid transparent;
+}
+.chip-critical{background:var(--crit-soft);color:var(--crit);border-color:var(--crit-line)}
+.chip-high{background:var(--warn-soft);color:var(--warn);border-color:var(--warn-line)}
+.chip-med{background:var(--surface-2);color:var(--ink-3);border-color:var(--line-2)}
+.chip-ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok-line)}
+.chip-form{background:var(--accent-soft);color:var(--accent);border-color:transparent;text-transform:none;letter-spacing:.02em}
+
+.path{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  margin:0;
+  letter-spacing:.01em;
+  word-break:break-word;
+}
+.ibody p{margin:0;max-width:70ch;color:var(--ink-2)}
+.ibody p strong{color:var(--ink);font-weight:600}
+.ibody ul{margin:0;padding-left:18px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+.ibody ul li::marker{color:var(--ink-3)}
+
+code{
+  font-family:var(--mono);
+  font-size:.9em;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  padding:.5px 4px;
+  border-radius:3px;
+  word-break:break-word;
+}
+
+/* ============================================================
+   CODE BLOCKS + COPY
+   ============================================================ */
+.snip{position:relative;border:1px solid var(--line-2);border-radius:var(--r);background:var(--surface-2);overflow:hidden}
+.snip .sniphead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:5px 6px 5px 11px;
+  border-bottom:1px solid var(--line);
+  background:var(--surface-3);
+}
+.snip .sniplabel{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:600;
+}
+.copy{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-weight:600;
+  padding:3px 8px;
+  border:1px solid var(--line-2);
+  background:var(--surface);
+  color:var(--ink-2);
+  border-radius:3px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
+.copy.ok{background:var(--ok-soft);border-color:var(--ok-line);color:var(--ok)}
+.snip pre{
+  margin:0;
+  padding:11px;
+  overflow-x:auto;
+  font-family:var(--mono);
+  font-size:var(--f-sm);
+  line-height:1.62;
+  color:var(--ink);
+  white-space:pre;
+  tab-size:2;
+}
+
+/* ============================================================
+   CALLOUTS
+   ============================================================ */
+.note{
+  border-left:2px solid var(--accent);
+  background:var(--accent-soft);
+  padding:10px 13px;
+  border-radius:0 var(--r) var(--r) 0;
+  font-size:var(--f-sm);
+  color:var(--ink-2);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+.note strong{color:var(--ink);font-weight:600}
+.note .nlabel{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  font-weight:600;
+  display:block;
+  margin-bottom:3px;
+}
+.note .nlabel{color:var(--accent)}
+.note.warn .nlabel{color:var(--warn)}
+.note.crit .nlabel{color:var(--crit)}
+.note.ok .nlabel{color:var(--ok)}
+
+.quote{
+  margin:0;
+  padding:9px 13px;
+  border-left:2px solid var(--line-2);
+  color:var(--ink-3);
+  font-size:var(--f-sm);
+  font-style:italic;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:var(--f-sm);min-width:460px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:600;
+  background:var(--surface-2);
+  white-space:nowrap;
+}
+td{color:var(--ink-2)}
+td code{font-size:.92em}
+td.c{text-align:center;font-family:var(--mono);color:var(--accent);font-weight:600}
+tbody tr:hover{background:var(--surface-2)}
+
+/* ============================================================
+   MISC
+   ============================================================ */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  background:var(--surface);
+  padding:15px 17px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  box-shadow:var(--shadow-sm);
+}
+.card h4{
+  font-family:var(--mono);
+  font-size:var(--f-sm);
+  font-weight:600;
+  margin:0;
+  letter-spacing:-.01em;
+}
+.card p{margin:0;font-size:var(--f-sm);color:var(--ink-2)}
+.card.pick{border-color:var(--accent);border-width:1.5px}
+.card .verdict{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  font-weight:600;
+}
+.card .verdict.yes{color:var(--ok)}
+.card .verdict.no{color:var(--crit)}
+
+/* ---- group-by-instrument view ---- */
+#formview{display:none;flex-direction:column;gap:44px}
+body.byform #formview{display:flex}
+body.byform .sec{display:none}
+body.byform .masthead{margin-bottom:-14px}
+body.byform #jumpgroup{display:none}
+.fgroup{display:flex;flex-direction:column;gap:14px}
+.fgroup.allhidden{display:none}
+.fghead{
+  display:flex;
+  align-items:baseline;
+  gap:11px;
+  padding-bottom:5px;
+  border-bottom:1px solid var(--line);
+}
+.fghead h2{
+  font-family:var(--mono);
+  font-size:var(--f-lg);
+  font-weight:600;
+  letter-spacing:-.03em;
+  margin:0;
+}
+.fghead .fgcount{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+  margin-left:auto;
+}
+.fghead .fgwhere{
+  font-family:var(--mono);
+  font-size:var(--f-xs);
+  color:var(--accent);
+  letter-spacing:.02em;
+}
+
+.empty{
+  display:none;
+  padding:26px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:var(--f-sm);
+  color:var(--ink-3);
+  border:1px dashed var(--line-2);
+  border-radius:var(--r);
+}
+.sec.allhidden .empty{display:block}
+
+.qa{display:flex;flex-direction:column;gap:6px;padding:15px 17px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+.qa .q{font-family:var(--mono);font-size:var(--f-sm);font-weight:600;letter-spacing:-.01em;color:var(--accent)}
+.qa .a{margin:0;color:var(--ink-2);max-width:72ch}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .rail{
+    position:static;
+    height:auto;
+    border-right:none;
+    border-bottom:1px solid var(--line);
+  }
+  .main{padding:26px 20px 90px;gap:44px}
+  .railfoot{margin-top:0}
+  :root{--f-2xl:27px;--f-xl:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+
+<div class="shell">
+
+<!-- ============================== RAIL ============================== -->
+<aside class="rail">
+  <div class="brand">
+    <span class="mark">Task 1 · REDCap</span>
+    <h1>Build Console</h1>
+    <span class="sub">v3 · rev 16 Aug 2026</span>
+  </div>
+
+  <div class="progress">
+    <svg class="ring" viewBox="0 0 52 52" aria-hidden="true">
+      <circle class="track" cx="26" cy="26" r="21.5"></circle>
+      <circle class="bar" id="ring" cx="26" cy="26" r="21.5"
+              stroke-dasharray="135.1" stroke-dashoffset="135.1"
+              transform="rotate(-90 26 26)"></circle>
+    </svg>
+    <div>
+      <div class="pnum"><span id="pdone">0</span><span style="color:var(--ink-3);font-weight:400">/<span id="ptotal">0</span></span></div>
+      <div class="plabel">build steps done</div>
+    </div>
+  </div>
+
+  <div class="railgroup" id="jumpgroup">
+    <h2>Sections</h2>
+    <nav class="jump" id="jump"></nav>
+  </div>
+
+  <div class="railgroup">
+    <h2>Priority</h2>
+    <div class="filters" id="fprio">
+      <button class="fbtn" data-prio="critical" aria-pressed="false">critical</button>
+      <button class="fbtn" data-prio="high" aria-pressed="false">high</button>
+      <button class="fbtn" data-prio="med" aria-pressed="false">polish</button>
+    </div>
+  </div>
+
+  <div class="railgroup">
+    <h2>Instrument</h2>
+    <div class="filters" id="fform">
+      <button class="fbtn" data-form="demographics" aria-pressed="false">Demographics</button>
+      <button class="fbtn" data-form="screening" aria-pressed="false">Screening</button>
+      <button class="fbtn" data-form="medhist" aria-pressed="false">Med History</button>
+      <button class="fbtn" data-form="blood" aria-pressed="false">Blood</button>
+      <button class="fbtn" data-form="vaccination" aria-pressed="false">Vaccination</button>
+      <button class="fbtn" data-form="ae" aria-pressed="false">Adverse Events</button>
+      <button class="fbtn" data-form="pd" aria-pressed="false">Deviations</button>
+      <button class="fbtn" data-form="delivery" aria-pressed="false">Delivery</button>
+      <button class="fbtn" data-form="project" aria-pressed="false">Project-level</button>
+    </div>
+  </div>
+
+  <div class="railgroup">
+    <h2>Find</h2>
+    <input class="search" id="search" type="search" placeholder="variable or keyword…" aria-label="Search build steps">
+  </div>
+
+  <div class="railgroup">
+    <h2>View</h2>
+    <div class="filters">
+      <button class="fbtn" id="byform" aria-pressed="false">group by instrument</button>
+      <button class="fbtn" id="hidedone" aria-pressed="false">hide done</button>
+    </div>
+  </div>
+
+  <div class="railfoot">
+    <button class="linkbtn" id="reset">↺ Reset all checkboxes</button>
+  </div>
+</aside>
+
+<!-- ============================== MAIN ============================== -->
+<main class="main">
+
+<header class="masthead">
+  <div class="kicker">
+    <span>Longitudinal vaccine trial</span><span>·</span>
+    <span>6 events · 8 instruments · 67 fields</span><span>·</span>
+    <span>Due <b>Mon 17 Aug, 23:00 CEST</b></span>
+  </div>
+  <h1>Thirty-eight fixes between here and Monday.</h1>
+  <p class="lede">The whole build guide as a working checklist: every fix with its navigation path, every logic string on a copy button, and progress that persists while you work. <strong>Filter to one instrument and the list becomes that form's to-do list</strong> — which is how you actually work in Designer, one form at a time.</p>
+</header>
+
+<div id="formview"></div>
+
+<!-- ===================== §1 BREAKING FIXES ===================== -->
+<section class="sec" id="s-1" data-title="Six breaking fixes" data-n="1">
+  <div class="sechead">
+    <span class="eyebrow">Section 1 · 30 minutes · not skippable</span>
+    <h2>Six things that are broken</h2>
+    <p>Demographics and Screening carry four of the six. Open those two first and most of this clears without switching forms.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="demographics" data-prio="critical" data-id="1.1">
+      <label class="tick"><input type="checkbox" data-key="1.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.1</span><h3><code>age</code> calculates from <code>'today'</code></h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Demographics</span></div>
+        <p class="path">Designer → Demographics → age → Calculation</p>
+        <p>Current: <code>rounddown(datediff([dob], 'today', 'y'))</code>. REDCap warns against <code>today</code>/<code>now</code> inside calculations — the value only refreshes when the form is re-saved, so stored age drifts from displayed age and <strong>Data Quality Rule E flags every record permanently</strong>. Age in a trial means <em>age at enrolment</em>: a fixed fact.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Calculation</span><button class="copy">Copy</button></div><pre>rounddown(datediff([dob],[d1_date],"y"))</pre></div>
+        <p>Use <strong>Test this calculation</strong> before leaving the field.</p>
+        <div class="note warn"><span class="nlabel">If your version rejects the argument order</span>Try <code>datediff([dob],[d1_date],"y","dmy",true)</code>.</div>
+      </div>
+    </article>
+
+    <article class="item" data-form="demographics" data-prio="critical" data-id="1.2">
+      <label class="tick"><input type="checkbox" data-key="1.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.2</span><h3><code>d1_date</code> has <code>min = today</code></h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Demographics</span></div>
+        <p class="path">Designer → Demographics → d1_date → Text Validation Min</p>
+        <p>That forces Day 1 to be the exact date of data entry. A site typing up yesterday's visit cannot record the correct date. <strong>Delete the min. Keep <code>max = today</code>.</strong></p>
+      </div>
+    </article>
+
+    <article class="item" data-form="screening" data-prio="critical" data-id="1.3">
+      <label class="tick"><input type="checkbox" data-key="1.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.3</span><h3><code>bmi_above_35</code> calculation is invalid syntax</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
+        <p class="path">Designer → Screening and Eligibility → bmi_above_35</p>
+        <p>Current: <code>if([bmi]&gt;35,0="Yes",1="No")</code>. <code>if()</code> takes <code>if(condition, value_if_true, value_if_false)</code> — equals-signs inside the arguments are not syntax, and a <code>calc</code> field returns numbers only.</p>
+        <p><strong>Fix:</strong> change the field type to <strong>radio</strong>, choices <code>1, Yes | 0, No</code>, delete the calculation. It is being converted to a collected radio in §3.3 anyway.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="screening" data-prio="critical" data-id="1.4">
+      <label class="tick"><input type="checkbox" data-key="1.4"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.4</span><h3><code>eligible</code> sums text values</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
+        <p class="path">Designer → Screening and Eligibility → eligible</p>
+        <p>Two of the six operands return strings, and you cannot add strings. A blank form also evaluates to "No" rather than blank. <strong>Fix:</strong> converted to a collected radio with a discrepancy warning in §3.3.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="delivery" data-prio="critical" data-id="1.5">
+      <label class="tick"><input type="checkbox" data-key="1.5"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.5</span><h3><code>specify_other</code> is a radio with no choices</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Delivery</span></div>
+        <p class="path">Designer → Delivery Data → specify_other</p>
+        <p>A radio with an empty choice list renders as nothing at all.</p>
+        <div class="tw"><table>
+          <tr><th>Property</th><th>Value</th></tr>
+          <tr><td>Field type</td><td><strong>Text</strong></td></tr>
+          <tr><td>Label</td><td>Specify other delivery method</td></tr>
+          <tr><td>Branching logic</td><td><code>[delivery_method] = '4'</code></td></tr>
+          <tr><td>Required</td><td>Yes</td></tr>
+        </table></div>
+        <p class="quote">This is exactly the P015 defect in the Task 2 export — method recorded as Other with the specification blank. Worth a line in the build note.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="vaccination" data-prio="critical" data-id="1.6">
+      <label class="tick"><input type="checkbox" data-key="1.6"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">1.6</span><h3><code>[event_label]</code> on the Vaccination section header</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Vaccination</span></div>
+        <p class="path">Designer → Vaccination → vaccination_date → Section Header</p>
+        <p>Underscore instead of hyphen. The smart variable is <code>[event-label]</code>. With the underscore REDCap pipes your descriptive field <code>event_label</code>, which holds no value, and renders blank.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Section header</span><button class="copy">Copy</button></div><pre>Vaccination information for [event-label]</pre></div>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §2 STRUCTURAL ===================== -->
+<section class="sec" id="s-2" data-title="Structural gaps" data-n="2">
+  <div class="sechead">
+    <span class="eyebrow">Section 2 · 35 minutes · not skippable</span>
+    <h2>Structural gaps</h2>
+    <p>Repeating instruments, event designation, and closing the Delivery form to non-pregnant participants.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="project" data-prio="critical" data-id="2.1">
+      <label class="tick"><input type="checkbox" data-key="2.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">2.1</span><h3>Enable repeating instruments</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Project-level</span></div>
+        <p class="path">Project Setup → Main project settings → "Use repeatable instruments and events?" → Enable · then Repeatable Instruments and Events → Modify</p>
+        <p><strong>The biggest single fix.</strong> Nothing in the project repeats, which fails three explicit requirements — multiple medical history events, multiple adverse events, multiple protocol deviations.</p>
+        <div class="tw"><table>
+          <tr><th>Event</th><th>Instrument to set repeating</th><th>Custom instance label</th></tr>
+          <tr><td>Day 1</td><td>Medical History</td><td><code>[diagnosis]</code></td></tr>
+          <tr><td>Adverse Event</td><td>Adverse Events</td><td><code>[ae_term] ([ae_start_date])</code></td></tr>
+          <tr><td>Protocol Deviation</td><td>Protocol Deviations</td><td><code>[dev_date] – [dev_category]</code></td></tr>
+        </table></div>
+        <p>Use repeating <strong>instrument</strong>, not repeating event — Day 1 holds four other forms, so that event cannot repeat. Either way the export gets a clean <code>redcap_repeat_instance</code> column, which is what <code>MH_No</code>, <code>AE_No</code> and <code>PD_No</code> are in the Task 2 dataset.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="high" data-id="2.2">
+      <label class="tick"><input type="checkbox" data-key="2.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">2.2</span><h3>Verify Designate Instruments for My Events</h3><span class="chip chip-high">high</span><span class="chip chip-form">Project-level</span></div>
+        <p class="path">Designer → Designate Instruments for My Events</p>
+        <div class="tw"><table>
+          <tr><th>Instrument</th><th>Day 1</th><th>Day 28</th><th>Day 42</th><th>Delivery</th><th>AE</th><th>PD</th></tr>
+          <tr><td>Demographics</td><td class="c">✓</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Medical History</td><td class="c">✓</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Screening &amp; Eligibility</td><td class="c">✓</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Blood Sampling</td><td class="c">✓</td><td class="c">✓</td><td class="c">✓</td><td></td><td></td><td></td></tr>
+          <tr><td>Vaccination</td><td class="c">✓</td><td class="c">✓</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>Delivery Data</td><td></td><td></td><td></td><td class="c">✓</td><td></td><td></td></tr>
+          <tr><td>Adverse Events</td><td></td><td></td><td></td><td></td><td class="c">✓</td><td></td></tr>
+          <tr><td>Protocol Deviations</td><td></td><td></td><td></td><td></td><td></td><td class="c">✓</td></tr>
+        </table></div>
+        <p>If Blood Sampling is designated at Day 1 only, the three-visit sampling requirement is unmet <strong>and</strong> the <code>[event-label]</code> piping has nothing to vary across.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="delivery" data-prio="high" data-id="2.3">
+      <label class="tick"><input type="checkbox" data-key="2.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">2.3</span><h3>Close the Delivery form to non-pregnant participants</h3><span class="chip chip-high">high</span><span class="chip chip-form">Delivery</span></div>
+        <p class="path">Designer → Form Display Logic → Delivery Data</p>
+        <p class="quote">"This form should only be applicable to pregnant women."</p>
+        <p>With one arm, the Delivery event currently exists for all participants including adult men.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Form Display Logic</span><button class="copy">Copy</button></div><pre>[day_1_arm_1][pregnant] = '1'</pre></div>
+        <p>The instrument greys out for anyone not flagged pregnant at Day 1 — stronger than field-level branching, which would leave an empty-but-open form. Form Display Logic is per-instrument and applies across all events; verify placement in your instance.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="demographics" data-prio="high" data-id="2.4">
+      <label class="tick"><input type="checkbox" data-key="2.4"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">2.4</span><h3>Harden the <code>pregnant</code> field</h3><span class="chip chip-high">high</span><span class="chip chip-form">Demographics</span></div>
+        <p class="path">Designer → Demographics → pregnant</p>
+        <p>It now determines whether an entire CRF is available, so it cannot be optional.</p>
+        <div class="tw"><table>
+          <tr><th>Property</th><th>Change to</th></tr>
+          <tr><td>Label</td><td>Is the participant pregnant at enrolment?</td></tr>
+          <tr><td>Required</td><td><strong>Yes</strong></td></tr>
+          <tr><td>Field note</td><td>Determines whether the Delivery CRF becomes available. Must be completed for all female participants.</td></tr>
+          <tr><td>Branching</td><td>Keep <code>[sex] = '2'</code></td></tr>
+        </table></div>
+      </div>
+    </article>
+
+    <article class="item" data-form="demographics" data-prio="high" data-id="2.5">
+      <label class="tick"><input type="checkbox" data-key="2.5"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">2.5</span><h3>Participant ID</h3><span class="chip chip-high">high</span><span class="chip chip-form">Demographics</span></div>
+        <p class="path">Designer → Demographics → record_id · Project Setup → Additional customizations</p>
+        <p class="quote">"Each participant must be uniquely identifiable using a Participant ID."</p>
+        <p>Minimum fix: relabel <code>record_id</code> to <strong>Participant ID</strong>. Better, if you have five minutes: turn <strong>off auto-numbering</strong> and add a field note specifying the format (<code>P001</code>, <code>P002</code> — matching the Task 2 export convention).</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Custom Record Label</span><button class="copy">Copy</button></div><pre>[sex] | [pregnant]</pre></div>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §3 FORM BY FORM ===================== -->
+<section class="sec" id="s-3" data-title="Form-by-form" data-n="3">
+  <div class="sechead">
+    <span class="eyebrow">Section 3 · 90 minutes · partially skippable</span>
+    <h2>Form-by-form remediation</h2>
+    <p>One card per instrument. §3.3 is the highest-value one — leave time for it.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="demographics" data-prio="high" data-id="3.1">
+      <label class="tick"><input type="checkbox" data-key="3.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.1</span><h3>Demographics</h3><span class="chip chip-high">high</span><span class="chip chip-form">Demographics</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td><code>record_id</code></td><td>Label → <code>Participant ID</code></td></tr>
+          <tr><td><code>dob</code></td><td>Label → <code>Date of birth</code>; add <code>max = today</code>; set <strong>Identifier? = y</strong></td></tr>
+          <tr><td><code>age</code></td><td>Fix calculation (1.1); label → <code>Age at enrolment (years)</code>; note: <em>Calculated automatically from date of birth and the Day 1 date.</em></td></tr>
+          <tr><td><code>sex</code></td><td>Choices → <code>1, Male | 2, Female</code></td></tr>
+          <tr><td><code>d1_date</code></td><td>Remove <code>min</code>; label → <code>Date of Day 1 visit</code></td></tr>
+          <tr><td><code>height</code></td><td>Label → <code>Height (cm)</code>; validation <code>number</code>, min 100, max 220</td></tr>
+          <tr><td><code>weight</code></td><td>Label → <code>Weight (kg)</code>; validation <strong><code>number</code></strong> (not <code>number_comma_decimal</code>), min 30, max 200</td></tr>
+          <tr><td><code>bmi</code></td><td>Label → <code>BMI (kg/m²)</code>; keep the calculation — it is correct</td></tr>
+        </table></div>
+        <div class="note crit">
+          <span class="nlabel">Decimal convention</span>
+          <code>height</code> uses <code>number</code> (period) and <code>weight</code> uses <code>number_comma_decimal</code> (comma). Mixed conventions feeding the same calculation is a real hazard, and the BMI calculation and the §4.2 warning are both downstream of it. Standardise on <code>number</code>.
+        </div>
+        <div class="note">
+          <span class="nlabel">Register</span>
+          Every label is second-person survey phrasing — <em>"What is your date of birth?"</em>, <em>"How tall are you?"</em>, <em>"What is you body weight?"</em>. This is a CRF completed by study staff from source documents, not a participant questionnaire. Nominal labels throughout — which also catches the <code>you body weight</code> typo.
+        </div>
+      </div>
+    </article>
+
+    <article class="item" data-form="medhist" data-prio="high" data-id="3.2">
+      <label class="tick"><input type="checkbox" data-key="3.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.2</span><h3>Medical History</h3><span class="chip chip-high">high</span><span class="chip chip-form">Med History</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td>—</td><td><strong>Set repeating</strong> (2.1)</td></tr>
+          <tr><td><code>diagnosis</code></td><td>Required = y. Note: <em>Record the diagnosis as documented in the source. One condition per record.</em></td></tr>
+          <tr><td><code>diagnosis</code></td><td><strong><code>BIOPORTAL:ICDO</code> is the wrong ontology</strong> — ICD-O is oncology morphology/topography. Switch to ICD-10, or drop to plain text</td></tr>
+          <tr><td><code>body_system</code></td><td>Replace SNOMED lookup with the radio list below</td></tr>
+          <tr><td><code>start_date</code></td><td><code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>end_date</code></td><td><code>max = today</code></td></tr>
+          <tr><td><code>ongoing</code> · <code>medication</code> · <code>medication_name</code></td><td>Required = y</td></tr>
+        </table></div>
+        <p>Free SNOMED lookup on "body system" gives uncontrolled granularity — a site can pick <em>structure of left fourth toe</em>. Also confirm BioPortal has an API key configured on your instance, or the field silently degrades.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">body_system choices</span><button class="copy">Copy</button></div><pre>1, Cardiovascular
+2, Respiratory
+3, Gastrointestinal / hepatic
+4, Renal / genitourinary
+5, Neurological
+6, Musculoskeletal
+7, Endocrine / metabolic
+8, Haematological
+9, Immune / allergic
+10, Infectious disease
+11, Dermatological
+12, Psychiatric
+99, Other</pre></div>
+        <p>Add <code>body_system_other</code> (text, branching <code>[body_system] = '99'</code>, required when shown).</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="screening" data-prio="critical" data-id="3.3">
+      <label class="tick"><input type="checkbox" data-key="3.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.3</span><h3>Screening — final field order</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
+        <p>The assignment says the form <em>"should <strong>collect</strong> Yes/No responses"</em> for all six criteria, and asks for consistency to be enforced <em>"with an appropriate warning or check"</em>. The current build derives two criteria and the overall decision — so two criteria are never collected, the decision can never disagree with the criteria, and there is no check left to demonstrate. <strong>Restructure to: collect all six, derive nothing, warn on disagreement.</strong></p>
+        <div class="tw"><table>
+          <tr><th>#</th><th>Variable</th><th>Type</th><th>Choices</th><th>Req</th></tr>
+          <tr><td colspan="5"><em>Section: Inclusion criteria</em> — <code>Answer Yes only if the criterion is met.</code></td></tr>
+          <tr><td>1</td><td><code>generally_healthy</code></td><td>yesno</td><td>—</td><td>y</td></tr>
+          <tr><td>2</td><td><code>age_18_or_older</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>3</td><td><code>w_age_check</code></td><td>descriptive</td><td>warning 4.1</td><td>—</td></tr>
+          <tr><td>4</td><td><code>icf_signed</code></td><td>yesno</td><td>—</td><td>y</td></tr>
+          <tr><td colspan="5"><em>Section: Exclusion criteria</em> — <code>Answer Yes if the criterion is PRESENT. A Yes here excludes the participant.</code></td></tr>
+          <tr><td>5</td><td><code>previous_ebola_trial</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
+          <tr><td>6</td><td><code>previous_mpox_vaccination</code></td><td>radio</td><td><strong><code>1, Yes | 0, No</code></strong> <em>(flip)</em></td><td>y</td></tr>
+          <tr><td>7</td><td><code>bmi_above_35</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>8</td><td><code>w_bmi_check</code></td><td>descriptive</td><td>warning 4.2</td><td>—</td></tr>
+          <tr><td colspan="5"><em>Section: Eligibility assessment</em></td></tr>
+          <tr><td>9</td><td><code>eligible</code></td><td><strong>radio</strong> <em>(was calc)</em></td><td><code>1, Yes | 0, No</code></td><td>y</td></tr>
+          <tr><td>11</td><td><code>w_eligible</code></td><td>descriptive</td><td>warning 4.3</td><td>—</td></tr>
+        </table></div>
+        <div class="note crit">
+          <span class="nlabel">Flip the exclusion coding</span>
+          You currently have <code>0, Yes | 1, No</code> — a deliberate inversion so the old eligibility sum worked. It leaves a permanent trap: in any export <code>previous_ebola_trial = 1</code> means <strong>No</strong>, and every downstream analyst will misread it. The summing calculation is going away, so flip to natural coding. All logic on this page assumes natural coding.
+        </div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Field note · each exclusion item</span><button class="copy">Copy</button></div><pre>Yes = criterion present (exclusionary).</pre></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Field note · eligible</span><button class="copy">Copy</button></div><pre>Record the investigator's enrolment decision. If this differs from the criteria above, a protocol deviation must be documented.</pre></div>
+      </div>
+    </article>
+
+    <article class="item" data-form="blood" data-prio="high" data-id="3.4">
+      <label class="tick"><input type="checkbox" data-key="3.4"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.4</span><h3>Blood Sampling</h3><span class="chip chip-high">high</span><span class="chip chip-form">Blood</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td><code>sample_collected</code></td><td>Required = y</td></tr>
+          <tr><td><code>reason_not_collected</code></td><td>Branching → <code>[sample_collected] = '0'</code>; Required = y</td></tr>
+          <tr><td><code>sample_barcode</code></td><td>Branching → <code>[sample_collected] = '1'</code>; <strong>Required = y</strong>; keep <code>@BARCODE-APP</code></td></tr>
+          <tr><td><code>sample_date</code></td><td>Branching → <code>[sample_collected] = '1'</code>; <code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>sample_time</code></td><td>Validation → <code>time</code> (hh:mm) not hh:mm:ss; Required = y</td></tr>
+          <tr><td><code>w_sample_seq</code></td><td>New descriptive — warning 4.4</td></tr>
+        </table></div>
+        <p><strong>Required on <code>sample_barcode</code> is the important one.</strong> In the Task 2 export, P017–P020 have <code>Sample_Collected = Yes</code> with a blank barcode — four consecutive participants, which points at a systematic site issue <em>and</em> at a field that was never required.</p>
+        <p>Standardise the branching quotes: you mix <code>[sample_collected]=1</code> here with <code>[ongoing] = '0'</code> on Medical History. Use <code>= '1'</code> consistently.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="vaccination" data-prio="high" data-id="3.5">
+      <label class="tick"><input type="checkbox" data-key="3.5"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.5</span><h3>Vaccination</h3><span class="chip chip-high">high</span><span class="chip chip-form">Vaccination</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td>Section header</td><td><code>[event_label]</code> → <strong><code>[event-label]</code></strong></td></tr>
+          <tr><td><code>vaccination_date</code></td><td><code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>vaccination_time</code> · <code>vaccination_arm</code></td><td>Required = y</td></tr>
+          <tr><td><code>adverse_reaction</code></td><td>Required = y; note: <em>30-minute observation period post-vaccination.</em></td></tr>
+          <tr><td><code>reaction_description</code></td><td>Branching → <code>[adverse_reaction] = '1'</code>; Required = y</td></tr>
+          <tr><td><code>w_vac_ae</code> · <code>w_vac_date</code></td><td>New descriptives — 4.5, 4.6</td></tr>
+        </table></div>
+        <div class="note crit">
+          <span class="nlabel">No @TODAY or @NOW on any date or time field here</span>
+          In the Task 2 export, <code>Vaccination_Time</code> is <code>10:00</code> on 47 of 48 rows and <code>Collection_Time</code> is 09:00 / 09:10 / 09:15 on essentially every record — the signature of pre-filled defaults. Data that looks complete and is silently unverified is worse than data that looks incomplete. Say this out loud if asked; it is one of the strongest lines available to you.
+        </div>
+      </div>
+    </article>
+
+    <article class="item" data-form="ae" data-prio="critical" data-id="3.6">
+      <label class="tick"><input type="checkbox" data-key="3.6"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.6</span><h3>Adverse Events</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Adverse Events</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td>—</td><td><strong>Set repeating</strong> (2.1)</td></tr>
+          <tr><td><code>ae_term</code></td><td>Required = y; note: <em>Record the diagnosis where available, otherwise the verbatim reported term. One event per record.</em></td></tr>
+          <tr><td><code>ae_start_date</code> · <code>ae_ongoing</code> · <code>ae_end_date</code></td><td><code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>w_ae_dates</code></td><td>New descriptive — warning 4.7</td></tr>
+          <tr><td><code>ae_severity</code> · <code>ae_serious</code></td><td>Required = y; field notes below</td></tr>
+          <tr><td><code>action_taken</code></td><td><strong>text → radio</strong>, choices below; Required = y</td></tr>
+          <tr><td><code>action_taken_spec</code></td><td><strong>New</strong> text; branching <code>[action_taken] = '2' or [action_taken] = '99'</code></td></tr>
+          <tr><td><code>outcome</code></td><td><strong>text → radio</strong>, choices below; Required = y</td></tr>
+          <tr><td><code>sae_type</code></td><td><strong>text → checkbox</strong>; <strong>branching <code>[ae_serious] = '1'</code></strong></td></tr>
+          <tr><td><code>sae_date_investigator</code> · <code>sae_date_sponsor</code></td><td><strong>Branching <code>[ae_serious] = '1'</code></strong>; <code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>w_sae_timing</code></td><td>New descriptive — warning 4.9</td></tr>
+        </table></div>
+        <p class="quote">"The form should behave appropriately depending on the information entered, for example whether the event is ongoing or serious." — the three SAE fields currently display for every adverse event.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">action_taken choices</span><button class="copy">Copy</button></div><pre>1, None
+2, Medication administered
+3, Non-drug therapy administered
+4, Study vaccination delayed
+5, Study vaccination discontinued
+6, Participant hospitalised
+7, Surgical or other procedure
+99, Other</pre></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">outcome choices (CIOMS-aligned)</span><button class="copy">Copy</button></div><pre>1, Recovered / resolved
+2, Recovering / resolving
+3, Not recovered / not resolved
+4, Recovered / resolved with sequelae
+5, Fatal
+6, Unknown</pre></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">sae_type — checkbox, not radio</span><button class="copy">Copy</button></div><pre>1, Results in death
+2, Is life-threatening
+3, Requires inpatient hospitalisation or prolongation of existing hospitalisation
+4, Results in persistent or significant disability / incapacity
+5, Is a congenital anomaly / birth defect
+6, Other medically important event</pre></div>
+        <p class="quote">The Task 2 export mixes drug names with actions in a single free-text column, and only has <em>Recovered</em> and <em>Recovering</em> as outcomes — a fatal outcome could not be recorded at all. Both are configuration findings worth raising in the Task 2 review.</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Field note · ae_severity</span><button class="copy">Copy</button></div><pre>Severity describes the intensity of the event as assessed by the investigator. It is independent of seriousness.</pre></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Field note · ae_serious</span><button class="copy">Copy</button></div><pre>Seriousness is a regulatory classification. Answer Yes only if the event meets at least one of the criteria below. A severe event is not automatically a serious event.</pre></div>
+      </div>
+    </article>
+
+    <article class="item" data-form="pd" data-prio="high" data-id="3.7">
+      <label class="tick"><input type="checkbox" data-key="3.7"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.7</span><h3>Protocol Deviations</h3><span class="chip chip-high">high</span><span class="chip chip-form">Deviations</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td>—</td><td><strong>Set repeating</strong> (2.1)</td></tr>
+          <tr><td><code>dev_lassification</code></td><td><strong>Typo</strong> — rename to <code>dev_classification</code></td></tr>
+          <tr><td><code>dev_date</code></td><td><code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>dev_category</code></td><td><strong>text → radio</strong>, choices below; Required = y</td></tr>
+          <tr><td><code>dev_category_other</code></td><td><strong>New</strong> text; branching <code>[dev_category] = '99'</code></td></tr>
+          <tr><td><code>dev_description</code></td><td><strong>text → notes</strong>; Required = y</td></tr>
+          <tr><td><code>dev_corrective_action</code></td><td><strong>text → notes</strong>; Required = y</td></tr>
+        </table></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">dev_category choices</span><button class="copy">Copy</button></div><pre>1, Eligibility / inclusion or exclusion criteria
+2, Informed consent
+3, Visit schedule or visit window
+4, Study procedure not performed or performed incorrectly
+5, Study product administration
+6, Sample collection, handling or storage
+7, Safety reporting
+8, Documentation or data collection
+99, Other</pre></div>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Field note · dev_classification</span><button class="copy">Copy</button></div><pre>Major: a deviation that may affect participant safety, participant rights, or the integrity of the study data. Minor: all other deviations. If unsure, classify as Major and discuss with the sponsor.</pre></div>
+      </div>
+    </article>
+
+    <article class="item" data-form="delivery" data-prio="high" data-id="3.8">
+      <label class="tick"><input type="checkbox" data-key="3.8"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">3.8</span><h3>Delivery Data</h3><span class="chip chip-high">high</span><span class="chip chip-form">Delivery</span></div>
+        <div class="tw"><table>
+          <tr><th>Variable</th><th>Change</th></tr>
+          <tr><td>—</td><td><strong>Form Display Logic</strong> <code>[day_1_arm_1][pregnant] = '1'</code> (2.3)</td></tr>
+          <tr><td><code>specify_other</code></td><td><strong>radio → text</strong>; branching <code>[delivery_method] = '4'</code>; Required = y</td></tr>
+          <tr><td><code>delivery_date</code></td><td><code>max = today</code>; Required = y</td></tr>
+          <tr><td><code>delivery_time</code></td><td>Validation → <code>time</code> (hh:mm); Required = y; fix "Tim of delivery" typo</td></tr>
+          <tr><td><code>delivery_timing</code> · <code>delivery_method</code></td><td>Required = y</td></tr>
+          <tr><td><code>apgar1_*</code> (5 fields)</td><td>Required = y</td></tr>
+          <tr><td><code>apgar2_*</code> (5 fields)</td><td>Required = y; consider renaming to <code>apgar5_*</code> — it is the 5-minute score</td></tr>
+          <tr><td><code>w_apgar</code> · <code>w_delivery_date</code></td><td>New descriptives — 4.10, 4.11</td></tr>
+        </table></div>
+        <div class="note ok">
+          <span class="nlabel">Keep the Apgar decomposition</span>
+          Five components × two timepoints with calculated totals is the best thing in your dictionary — clinically correct, and it removes the arithmetic error entirely. It is twelve fields where the spec asked for two, so be ready to justify it: <em>"the total is what the spec asked for, but a transcribed total cannot be verified against source, whereas the five components can."</em>
+        </div>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §4 WARNINGS ===================== -->
+<section class="sec" id="s-4" data-title="Warning library" data-n="4">
+  <div class="sechead">
+    <span class="eyebrow">Section 4 · 45 minutes · skippable if short</span>
+    <h2>Cross-field warning library</h2>
+    <p>REDCap has no native "warn but allow" rule, so build one: a Descriptive Text field whose branching logic is the <em>inconsistent</em> condition. It appears only when the data are wrong, is impossible to miss, and never blocks a legitimate entry.</p>
+  </div>
+
+  <div class="note">
+    <span class="nlabel">The pattern — same four steps every time</span>
+    Add a <strong>Descriptive Text</strong> field → set the label to the HTML block below → set branching logic to the inconsistent condition → annotate <code>@HIDDEN-PDF</code> so warnings stay off the paper CRF.
+  </div>
+  <div class="snip">
+    <div class="sniphead"><span class="sniplabel">Reusable label template</span><button class="copy">Copy</button></div>
+    <pre>&lt;div style="color:#B00020;font-weight:bold;padding:8px;border:1px solid #B00020;border-radius:4px;"&gt;
+⚠ [warning text here]
+&lt;/div&gt;</pre>
+  </div>
+
+  <div class="items">
+
+    <article class="item" data-form="blood" data-prio="med" data-id="4.4">
+      <label class="tick"><input type="checkbox" data-key="4.4"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.4</span><h3><code>w_sample_seq</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Blood</span></div>
+        <p class="path">Blood Sampling → after <code>sample_time</code> · appears at Day 1, Day 28 and Day 42</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[sample_date] &lt;&gt; "" and [day_1_arm_1][d1_date] &lt;&gt; "" and [sample_date] &lt; [day_1_arm_1][d1_date]</pre></div>
+        <p class="quote">The sample collection date precedes the Day 1 visit date. Verify against source.</p>
+        <p>Works because REDCap stores dates as <code>YYYY-MM-DD</code>, so a string comparison is also a chronological one.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="vaccination" data-prio="med" data-id="4.5">
+      <label class="tick"><input type="checkbox" data-key="4.5"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.5</span><h3><code>w_vac_ae</code> — prompt, not error</h3><span class="chip chip-med">polish</span><span class="chip chip-form">Vaccination</span></div>
+        <p class="path">Vaccination → immediately after <code>reaction_description</code> · style this one blue, not red</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[adverse_reaction] = '1'</pre></div>
+        <p class="quote">An immediate reaction has been recorded. Ensure a corresponding entry is completed on the Adverse Events form.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="vaccination" data-prio="med" data-id="4.6">
+      <label class="tick"><input type="checkbox" data-key="4.6"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.6</span><h3><code>w_vac_date</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Vaccination</span></div>
+        <p class="path">Vaccination → after <code>w_vac_ae</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[vaccination_date] &lt;&gt; "" and [sample_date] &lt;&gt; "" and [vaccination_date] &lt;&gt; [sample_date]</pre></div>
+        <p class="quote">The vaccination date differs from the blood sampling date at this visit. Confirm whether the visit was split across two days; if so, document a protocol deviation.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="ae" data-prio="med" data-id="4.7">
+      <label class="tick"><input type="checkbox" data-key="4.7"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.7</span><h3><code>w_ae_dates</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Adverse Events</span></div>
+        <p class="path">Adverse Events → immediately after <code>ae_end_date</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[ae_end_date] &lt;&gt; "" and [ae_start_date] &lt;&gt; "" and [ae_end_date] &lt; [ae_start_date]</pre></div>
+        <p class="quote">The end date precedes the start date. Correct before saving.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="ae" data-prio="med" data-id="4.8">
+      <label class="tick"><input type="checkbox" data-key="4.8"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.8</span><h3><code>w_ae_outcome</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Adverse Events</span></div>
+        <p class="path">Adverse Events → immediately after <code>outcome</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[ae_ongoing] = '1' and ([outcome] = '1' or [outcome] = '4' or [outcome] = '5')</pre></div>
+        <p class="quote">The event is recorded as ongoing but the outcome indicates it has resolved or is fatal. Review and correct.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="ae" data-prio="high" data-id="4.9">
+      <label class="tick"><input type="checkbox" data-key="4.9"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.9</span><h3><code>w_sae_timing</code></h3><span class="chip chip-high">high</span><span class="chip chip-form">Adverse Events</span></div>
+        <p class="path">Adverse Events → end of the SAE section, after <code>sae_date_sponsor</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[sae_date_investigator] &lt;&gt; "" and [sae_date_sponsor] &lt;&gt; ""
+and datediff([sae_date_investigator],[sae_date_sponsor],"d",true) &gt; 1</pre></div>
+        <p class="quote">The SAE was reported to the sponsor more than 24 hours after the investigator became aware. This is a reportable protocol deviation — complete the Protocol Deviations form.</p>
+        <div class="note warn"><span class="nlabel">Verify first</span>Confirm <code>datediff</code> works in branching logic on your version. If not, move this to a Data Quality rule only. This is the P007 case in the Task 2 export: aware 18 June, reported 22 June.</div>
+      </div>
+    </article>
+
+    <article class="item" data-form="delivery" data-prio="med" data-id="4.10">
+      <label class="tick"><input type="checkbox" data-key="4.10"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.10</span><h3><code>w_apgar</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Delivery</span></div>
+        <p class="path">Delivery Data → after <code>apgar_score_after_5_minutes</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[apgar_score_after_1_minute] &lt;&gt; "" and [apgar_score_after_5_minutes] &lt;&gt; ""
+and [apgar_score_after_5_minutes] &lt; [apgar_score_after_1_minute]</pre></div>
+        <p class="quote">The 5-minute Apgar score is lower than the 1-minute score. This is possible but uncommon — verify against source.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="delivery" data-prio="med" data-id="4.11">
+      <label class="tick"><input type="checkbox" data-key="4.11"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.11</span><h3><code>w_delivery_date</code></h3><span class="chip chip-med">polish</span><span class="chip chip-form">Delivery</span></div>
+        <p class="path">Delivery Data → after <code>delivery_time</code></p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>[delivery_date] &lt;&gt; "" and [day_1_arm_1][d1_date] &lt;&gt; "" and [delivery_date] &lt; [day_1_arm_1][d1_date]</pre></div>
+        <p class="quote">The delivery date precedes the Day 1 visit date. Verify against source.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="screening" data-prio="critical" data-id="4.3">
+      <label class="tick"><input type="checkbox" data-key="4.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">4.3</span><h3><code>w_eligible</code></h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Screening</span></div>
+        <p class="path">Screening and Eligibility → last field on the form · written for <strong>natural</strong> exclusion coding</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Branching logic</span><button class="copy">Copy</button></div><pre>([eligible] = '1' and ([generally_healthy] = '0' or [age_18_or_older] = '0' or [icf_signed] = '0' or [previous_ebola_trial] = '1' or [previous_mpox_vaccination] = '1' or [bmi_above_35] = '1'))
+or
+([eligible] = '0' and [generally_healthy] = '1' and [age_18_or_older] = '1' and [icf_signed] = '1' and [previous_ebola_trial] = '0' and [previous_mpox_vaccination] = '0' and [bmi_above_35] = '0')</pre></div>
+        <p class="quote">The overall eligibility decision does not agree with the individual criteria recorded above. If the participant is being enrolled regardless, a protocol deviation must be documented.</p>
+        <div class="note warn"><span class="nlabel">If you keep the inverted coding</span>Invert every exclusion term: <code>= '1'</code> becomes <code>= '0'</code> and vice versa, for the three exclusion fields, here and everywhere else on this page.</div>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §5 QUERIES + DQ ===================== -->
+<section class="sec" id="s-5" data-title="Queries &amp; data quality" data-n="5">
+  <div class="sechead">
+    <span class="eyebrow">Section 5 · 30 minutes · partially skippable</span>
+    <h2>Query management and data quality</h2>
+    <p>The inline warnings catch errors at entry. These catch everything that arrives by import, from a user who dismissed the warning, or through a later edit. The redundancy is the point.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="project" data-prio="critical" data-id="5.1">
+      <label class="tick"><input type="checkbox" data-key="5.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">5.1</span><h3>Enable the Data Resolution Workflow</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Project-level</span></div>
+        <p class="path">Project Setup → Enable optional modules and customizations → Additional customizations → Data Resolution Workflow</p>
+        <p class="quote">"The database should provide a mechanism that allows data queries to be raised and followed up when data require clarification or correction."</p>
+        <div class="tw"><table>
+          <tr><th>Field Comment Log</th><th>Data Resolution Workflow</th></tr>
+          <tr><td>Free-text notes on a field</td><td>A query object: Open → Responded → Closed</td></tr>
+          <tr><td>No status, no assignment</td><td>Assignable to a user, with response threads</td></tr>
+          <tr><td>No dashboard</td><td><strong>Resolve Issues</strong> dashboard, filterable by status</td></tr>
+        </table></div>
+        <p>Field Comment Log is visible in your sidebar but no Resolve Issues entry — so this is very likely still off. It is one checkbox and it answers a named requirement. Then set <strong>User Rights → Data Resolution Workflow</strong> per role: data managers open and close, site staff respond only.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="high" data-id="5.2">
+      <label class="tick"><input type="checkbox" data-key="5.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">5.2</span><h3>Add twelve custom Data Quality rules</h3><span class="chip chip-high">high</span><span class="chip chip-form">Project-level</span></div>
+        <p class="path">Data Quality → Rules → Add new rule · leave predefined rules A–H active</p>
+        <p>Data Quality rules are <strong>project-level, not attached to a form</strong> — build them once and REDCap evaluates them across every record and event. The <em>Points at</em> column only tells you which instrument a discrepancy will name when the rule fires.</p>
+        <div class="tw"><table>
+          <tr><th>#</th><th>Name</th><th>Points at</th><th>Logic</th></tr>
+          <tr><td>1</td><td>Age criterion inconsistent</td><td>Screening</td><td><code>[age] &lt;&gt; "" and [age] &lt; 18 and [age_18_or_older] = '1'</code></td></tr>
+          <tr><td>2</td><td>BMI criterion inconsistent</td><td>Screening</td><td><code>[bmi] &lt;&gt; "" and [bmi] &gt; 35 and [bmi_above_35] = '0'</code></td></tr>
+          <tr><td>3</td><td>Eligible despite failing criterion</td><td>Screening</td><td><code>[eligible] = '1' and ([previous_ebola_trial] = '1' or [previous_mpox_vaccination] = '1' or [bmi_above_35] = '1' or [generally_healthy] = '0' or [icf_signed] = '0' or [age_18_or_older] = '0')</code></td></tr>
+          <tr><td>4</td><td>Sample collected, barcode missing</td><td>Blood Sampling</td><td><code>[sample_collected] = '1' and [sample_barcode] = ""</code></td></tr>
+          <tr><td>5</td><td>Sample not collected, no reason</td><td>Blood Sampling</td><td><code>[sample_collected] = '0' and [reason_not_collected] = ""</code></td></tr>
+          <tr><td>6</td><td>Vaccination and sampling dates differ</td><td>Vaccination</td><td><code>[vaccination_date] &lt;&gt; "" and [sample_date] &lt;&gt; "" and [vaccination_date] &lt;&gt; [sample_date]</code></td></tr>
+          <tr><td>7</td><td>AE end before start</td><td>Adverse Events</td><td><code>[ae_end_date] &lt;&gt; "" and [ae_end_date] &lt; [ae_start_date]</code></td></tr>
+          <tr><td>8</td><td>AE ongoing but resolved outcome</td><td>Adverse Events</td><td><code>[ae_ongoing] = '1' and ([outcome] = '1' or [outcome] = '5')</code></td></tr>
+          <tr><td>9</td><td>SAE reported late</td><td>Adverse Events</td><td><code>[sae_date_investigator] &lt;&gt; "" and [sae_date_sponsor] &lt;&gt; "" and datediff([sae_date_investigator],[sae_date_sponsor],"d",true) &gt; 1</code></td></tr>
+          <tr><td>10</td><td>Delivery before enrolment</td><td>Delivery Data</td><td><code>[delivery_date] &lt;&gt; "" and [delivery_date] &lt; [day_1_arm_1][d1_date]</code></td></tr>
+          <tr><td>11</td><td>Delivery recorded, not flagged pregnant</td><td>Delivery Data</td><td><code>[delivery_date] &lt;&gt; "" and [day_1_arm_1][pregnant] &lt;&gt; '1'</code></td></tr>
+          <tr><td>12</td><td>Other method, no specification</td><td>Delivery Data</td><td><code>[delivery_method] = '4' and [specify_other] = ""</code></td></tr>
+        </table></div>
+        <p>Enable <strong>real-time execution</strong> on rules 1–5 so discrepancies surface at entry rather than at the next review cycle. The overlap with §4 is deliberate: the inline warning catches errors at entry, the DQ rule catches everything arriving by import, from a user who ignored the warning, or through a later edit.</p>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §6 PAPER CRF ===================== -->
+<section class="sec" id="s-6" data-title="Paper CRF" data-n="6">
+  <div class="sechead">
+    <span class="eyebrow">Section 6 · 25 minutes · it is a deliverable</span>
+    <h2>Paper CRF</h2>
+    <p>Generate via Project Setup / Other Functionality → <strong>Download PDF of all instruments → All instruments (blank)</strong>. Then check it against the six problems below — easy marks are lost here.</p>
+  </div>
+  <div class="items">
+    <article class="item" data-form="project" data-prio="critical" data-id="6.1">
+      <label class="tick"><input type="checkbox" data-key="6.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">6.1</span><h3>Check the generated PDF against these six</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Deliverable</span></div>
+        <div class="tw"><table>
+          <tr><th>Problem</th><th>Fix</th></tr>
+          <tr><td>Warning fields print as red blocks and confuse a paper user</td><td><code>@HIDDEN-PDF</code> on every <code>w_*</code> descriptive field</td></tr>
+          <tr><td>Branching-hidden fields missing from the PDF</td><td>Turn on the setting to include branching-logic fields, otherwise the paper CRF has holes</td></tr>
+          <tr><td>Calculated fields (<code>age</code>, <code>bmi</code>, Apgar totals) print as empty boxes with no explanation</td><td>Field note: <em>Calculated automatically in the database — leave blank on paper.</em></td></tr>
+          <tr><td>Dropdowns may print as a blank line without their choices</td><td>Your only dropdown is <code>ae_severity</code> — switch it to radio if the choices don't print</td></tr>
+          <tr><td>No room to write</td><td>Check <code>ae_term</code>, <code>dev_description</code>, <code>dev_corrective_action</code> — notes fields print a box, single-line text prints a line</td></tr>
+          <tr><td>No completion header</td><td>Add a section header on Demographics: Participant ID, site, initials of the person completing, date completed</td></tr>
+        </table></div>
+      </div>
+    </article>
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §7 TEST RECORDS ===================== -->
+<section class="sec" id="s-7" data-title="Test records" data-n="7">
+  <div class="sechead">
+    <span class="eyebrow">Section 7 · 30 minutes · not skippable</span>
+    <h2>Test records</h2>
+    <p>Two records. This is not optional — it is how you prove the build works, and it takes thirty minutes.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="project" data-prio="critical" data-id="7.1">
+      <label class="tick"><input type="checkbox" data-key="7.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">7.1</span><h3>P001 — clean adult male</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Test data</span></div>
+        <ul>
+          <li>Day 1: full Demographics, one Medical History entry, Blood Sampling collected with barcode, Vaccination</li>
+          <li>Screening: all six criteria answered, participant eligible</li>
+          <li>Day 28, Day 42: Blood Sampling; Vaccination at Day 28</li>
+          <li>One non-serious AE</li>
+          <li>Confirm the <strong>Delivery form is greyed out</strong> — this proves Form Display Logic works</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="critical" data-id="7.2">
+      <label class="tick"><input type="checkbox" data-key="7.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">7.2</span><h3>P002 — pregnant, deliberately inconsistent</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Test data</span></div>
+        <ul>
+          <li>Demographics: female, pregnant = Yes, height/weight giving <strong>BMI &gt; 35</strong></li>
+          <li>Screening: <code>bmi_above_35</code> = <strong>No</strong>, <code>eligible</code> = <strong>Yes</strong> → <code>w_bmi_check</code> and <code>w_eligible</code> must both fire</li>
+          <li>Save anyway — it must save, because an erroneous enrolment has to be recordable</li>
+          <li><strong>Three</strong> Medical History entries → proves repeating</li>
+          <li><strong>Two</strong> AEs, one serious, aware 18 June, reported to sponsor 22 June → <code>w_sae_timing</code> must fire</li>
+          <li>One Protocol Deviation, category <em>Eligibility / inclusion or exclusion criteria</em> — closes the loop the warning told the site to close</li>
+          <li>Delivery: method = Other, and confirm it will not save without <code>specify_other</code></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="high" data-id="7.3">
+      <label class="tick"><input type="checkbox" data-key="7.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">7.3</span><h3>Run all Data Quality rules, leave one query open</h3><span class="chip chip-high">high</span><span class="chip chip-form">Test data</span></div>
+        <p>Data Quality → <strong>Run all rules</strong> and confirm the discrepancies appear — rules 2 and 3 should both fire on P002. Then open <strong>one query through the Data Resolution Workflow and leave it open</strong>. The reviewers see the query mechanism working live rather than taking your word for it.</p>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §8 SUBMISSION ===================== -->
+<section class="sec" id="s-8" data-title="Submission pack" data-n="8">
+  <div class="sechead">
+    <span class="eyebrow">Section 8 · 25 minutes · not skippable</span>
+    <h2>Submission pack</h2>
+    <p>Email to <strong>Mahmoud.AbuAzoum@uantwerpen.be</strong> and <strong>Ynke.Lariviere@uantwerpen.be</strong>. Subject: <code>Data Manager Assessment – [Your Full Name]</code>. ZIP named <code>Data_Manager_Assessment_[Your_Full_Name].zip</code>.</p>
+  </div>
+  <div class="items">
+
+    <article class="item" data-form="project" data-prio="critical" data-id="8.1">
+      <label class="tick"><input type="checkbox" data-key="8.1"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">8.1</span><h3>Grant project access to both reviewers</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Deliverable</span></div>
+        <p>Add <code>Ylarivi</code> (Ynke Larivière) and <code>mabuazoum</code> (Mahmoud Abu Azoum), with <strong>Project Design and Setup</strong> rights — they need to inspect configuration, not just data.</p>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="critical" data-id="8.2">
+      <label class="tick"><input type="checkbox" data-key="8.2"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">8.2</span><h3>Export the four review artefacts</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Deliverable</span></div>
+        <ul>
+          <li>PDF of all instruments (blank), checked against Section 6</li>
+          <li><strong>Data Dictionary export (CSV)</strong> — fastest way for a reviewer to audit every field and logic string</li>
+          <li><strong>Codebook</strong> printed to PDF — human-readable companion</li>
+          <li>One-page build note (8.3)</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="critical" data-id="8.3">
+      <label class="tick"><input type="checkbox" data-key="8.3"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">8.3</span><h3>Write the one-page build note</h3><span class="chip chip-critical">critical</span><span class="chip chip-form">Deliverable</span></div>
+        <p>It converts design decisions a reviewer might miss into decisions they can see you made deliberately.</p>
+        <ol style="margin:0;padding-left:20px;color:var(--ink-2);display:flex;flex-direction:column;gap:7px">
+          <li><strong>Structure.</strong> Single arm, six events: three scheduled visits, Delivery, and two unscheduled events for AEs and PDs. AEs and PDs are participant-level rather than visit-bound, giving one chronological register per participant. Delivery is restricted via Form Display Logic on <code>[day_1_arm_1][pregnant]</code>.</li>
+          <li><strong>Derived versus collected.</strong> Age and BMI are calculated to remove a class of transcription error at source. All six eligibility criteria and the overall decision are <strong>collected</strong>, with derived values used only to trigger discrepancy warnings — because the investigator's enrolment decision is a regulatory record, and auto-deriving it would make an erroneous enrolment unrecordable.</li>
+          <li><strong>No default dates or times.</strong> Deliberately no <code>@TODAY</code> / <code>@NOW</code> on collection dates and times. Pre-filled timestamps produce data that appears complete and is silently unverified.</li>
+          <li><strong>Two-layer data quality.</strong> Inline warnings at entry, Data Quality rules as the backstop for imported or later-edited data. Query management via the Data Resolution Workflow with role-differentiated rights.</li>
+          <li><strong>Deliberate deviations.</strong> <code>sae_type</code> is a checkbox rather than a single selection, because an SAE can meet several criteria at once. Apgar is captured as five components per timepoint with a calculated total, because a transcribed total cannot be verified against source.</li>
+          <li><strong>Observations on the specification.</strong> Two gaps, raised rather than silently filled: no confirmation of pregnancy or gestational age is collected anywhere, yet the Delivery form asks for pre-term / term / post-term — unverifiable at analysis; and no informed consent <em>date</em> is collected, only a Yes/No, so the database cannot evidence that consent preceded any study procedure.</li>
+        </ol>
+      </div>
+    </article>
+
+    <article class="item" data-form="project" data-prio="high" data-id="8.4">
+      <label class="tick"><input type="checkbox" data-key="8.4"><span></span></label>
+      <div class="ibody">
+        <div class="ihead"><span class="num">8.4</span><h3>Leave the project in Development</h3><span class="chip chip-high">high</span><span class="chip chip-form">Deliverable</span></div>
+        <p>Reviewers can then inspect and modify freely, which is what they need. Add one line to your email:</p>
+        <div class="snip"><div class="sniphead"><span class="sniplabel">Email line</span><button class="copy">Copy</button></div><pre>The project remains in Development so the configuration can be reviewed and modified; in a live study it would move to Production only after user acceptance testing and Data Management Plan sign-off.</pre></div>
+        <p>That earns the lifecycle credit with none of the locking risk.</p>
+      </div>
+    </article>
+
+  </div>
+  <div class="empty">No steps match the current filters.</div>
+</section>
+
+<!-- ===================== §9 DEFENDING ===================== -->
+<section class="sec" id="s-9" data-title="Defending the design" data-n="9">
+  <div class="sechead">
+    <span class="eyebrow">Section 9 · read it, don't tick it</span>
+    <h2>Four challenges, with the answer prepared</h2>
+  </div>
+
+  <div class="qa">
+    <span class="q">"Why did you make the eligibility decision manual when you could calculate it?"</span>
+    <p class="a">Because eligibility is a regulatory act by the investigator, not an arithmetic output. If I auto-derive it, a participant enrolled in error shows as ineligible in a database where they are in fact enrolled — I lose the record of the actual decision and nothing triggers the protocol deviation. The database's job here is to make the disagreement impossible to ignore and point the site at the deviation form, which is what the warning and Data Quality rule 3 do.</p>
+  </div>
+
+  <div class="qa">
+    <span class="q">"Why one arm rather than two?"</span>
+    <p class="a">Arms require the participant group to be known at record creation. Here pregnancy status is captured on the Day 1 CRF, so the group is derived from collected data rather than assigned administratively. A single arm keeps one event schedule and one set of cross-event references to maintain, and Form Display Logic closes the Delivery form for non-pregnant participants. The trade-off I accepted is that the Delivery column appears greyed out on the Record Status Dashboard for every participant; two arms would keep that cleaner.</p>
+  </div>
+
+  <div class="qa">
+    <span class="q">"Why put Adverse Events in their own event?"</span>
+    <p class="a">An adverse event has a start date and an end date; it does not have a visit. If I attach the form to Day 1, Day 28 and Day 42, I get three independent repeating containers per participant, instance numbering restarts in each, and an event spanning two visits has no obvious home. A single rolling event gives one chronological safety register, which is what the safety physician and the statistician both need — and it matches how the data are actually structured in the export.</p>
+  </div>
+</section>
+
+<!-- ===================== §10 REFERENCE ===================== -->
+<section class="sec" id="s-10" data-title="Quick reference" data-n="10">
+  <div class="sechead">
+    <span class="eyebrow">Section 10</span>
+    <h2>Quick reference</h2>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Events</h4>
+      <div class="tw"><table style="min-width:0">
+        <tr><td>Day 1</td><td><code>day_1_arm_1</code></td></tr>
+        <tr><td>Day 28</td><td><code>day_28_arm_1</code></td></tr>
+        <tr><td>Day 42</td><td><code>day_42_arm_1</code></td></tr>
+        <tr><td>Delivery</td><td><code>delivery_arm_1</code></td></tr>
+        <tr><td>Adverse Event</td><td><code>adverse_event_arm_1</code></td></tr>
+        <tr><td>Protocol Deviation</td><td><code>protocol_deviation_arm_1</code></td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h4>Logic syntax</h4>
+      <div class="tw"><table style="min-width:0">
+        <tr><td>Same event</td><td><code>[bmi]</code></td></tr>
+        <tr><td>Cross-event</td><td><code>[day_1_arm_1][d1_date]</code></td></tr>
+        <tr><td>Checkbox selected</td><td><code>[sae_type(3)] = '1'</code></td></tr>
+        <tr><td>Not equal</td><td><code>&lt;&gt;</code></td></tr>
+        <tr><td>Guard against blank</td><td><code>[field] &lt;&gt; ""</code></td></tr>
+        <tr><td>Date difference</td><td><code>datediff([d1],[d2],"d",true)</code></td></tr>
+        <tr><td>Conditional</td><td><code>if([a] = '1' and [b] = '0', 1, 0)</code></td></tr>
+        <tr><td>Round down</td><td><code>rounddown(x)</code> · <code>round(x, 1)</code></td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h4>Action tags</h4>
+      <div class="tw"><table style="min-width:0">
+        <tr><td><code>@BARCODE-APP</code></td><td><code>sample_barcode</code></td></tr>
+        <tr><td><code>@HIDDEN-PDF</code></td><td>every <code>w_*</code> descriptive field</td></tr>
+        <tr><td><code>@TODAY</code> / <code>@NOW</code></td><td><strong>deliberately not used</strong></td></tr>
+      </table></div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- persistence (degrades to memory if storage is blocked) ---------- */
+  var mem = {};
+  var store = {
+    get: function(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k] === undefined ? null : mem[k]; } },
+    set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k] = v; } },
+    del: function(k){ try { localStorage.removeItem(k); } catch(e){ delete mem[k]; } }
+  };
+  var KEY = "redcap-task1-v4:";
+
+  /* ---------- checkboxes + progress ---------- */
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.tick input[type="checkbox"]'));
+  var ring = document.getElementById("ring");
+  var CIRC = 2 * Math.PI * 21.5;
+  ring.setAttribute("stroke-dasharray", CIRC.toFixed(1));
+
+  function paintProgress(){
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    document.getElementById("pdone").textContent = done;
+    document.getElementById("ptotal").textContent = boxes.length;
+    ring.setAttribute("stroke-dashoffset", (CIRC * (1 - done / boxes.length)).toFixed(1));
+    document.querySelectorAll(".sec").forEach(function(sec){
+      var bs = sec.querySelectorAll('.tick input[type="checkbox"]');
+      var tag = document.querySelector('.jump a[href="#' + sec.id + '"] .jdone');
+      if (!tag) return;
+      if (!bs.length){ tag.textContent = ""; return; }
+      var d = 0;
+      bs.forEach(function(b){ if (b.checked) d++; });
+      tag.textContent = d + "/" + bs.length;
+      tag.style.color = (d === bs.length) ? "var(--ok)" : "";
+    });
+  }
+
+  boxes.forEach(function(b){
+    var k = KEY + b.dataset.key;
+    if (store.get(k) === "1") b.checked = true;
+    b.closest(".item").classList.toggle("done", b.checked);
+    b.addEventListener("change", function(){
+      b.closest(".item").classList.toggle("done", b.checked);
+      if (b.checked) store.set(k, "1"); else store.del(k);
+      paintProgress();
+      applyFilters();
+    });
+  });
+
+  document.getElementById("reset").addEventListener("click", function(){
+    boxes.forEach(function(b){
+      b.checked = false;
+      store.del(KEY + b.dataset.key);
+      b.closest(".item").classList.remove("done");
+    });
+    paintProgress();
+    applyFilters();
+  });
+
+  /* ---------- section nav ---------- */
+  var jump = document.getElementById("jump");
+  var secs = Array.prototype.slice.call(document.querySelectorAll(".sec"));
+  secs.forEach(function(sec){
+    var a = document.createElement("a");
+    a.href = "#" + sec.id;
+    a.innerHTML = '<span class="jn">' + sec.dataset.n + '</span><span>' + sec.dataset.title + '</span><span class="jdone"></span>';
+    jump.appendChild(a);
+  });
+  var links = Array.prototype.slice.call(jump.querySelectorAll("a"));
+
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        links.forEach(function(l){ l.classList.toggle("on", l.getAttribute("href") === "#" + en.target.id); });
+      });
+    }, { rootMargin: "-10% 0px -70% 0px", threshold: 0 });
+    secs.forEach(function(s){ io.observe(s); });
+  }
+
+  /* ---------- filters ---------- */
+  var activePrio = new Set(), activeForm = new Set(), hideDone = false, q = "";
+  var items = Array.prototype.slice.call(document.querySelectorAll(".item"));
+
+  function applyFilters(){
+    items.forEach(function(it){
+      var ok = true;
+      if (activePrio.size && !activePrio.has(it.dataset.prio)) ok = false;
+      if (ok && activeForm.size && !activeForm.has(it.dataset.form)) ok = false;
+      if (ok && hideDone && it.classList.contains("done")) ok = false;
+      if (ok && q && it.textContent.toLowerCase().indexOf(q) === -1) ok = false;
+      it.classList.toggle("hide", !ok);
+    });
+    secs.forEach(function(sec){
+      var all = sec.querySelectorAll(".item");
+      if (!all.length){ sec.classList.remove("allhidden"); return; }
+      var vis = sec.querySelectorAll(".item:not(.hide)").length;
+      sec.classList.toggle("allhidden", vis === 0);
+    });
+    document.querySelectorAll(".fgroup").forEach(function(g){
+      var all = g.querySelectorAll(".item");
+      var vis = g.querySelectorAll(".item:not(.hide)").length;
+      g.classList.toggle("allhidden", all.length === 0 || vis === 0);
+      var done = 0;
+      all.forEach(function(it){ if (it.classList.contains("done")) done++; });
+      g.querySelector(".fgcount").textContent = all.length ? done + "/" + all.length + " done" : "";
+    });
+  }
+
+  function bindFilter(container, set, attr){
+    container.addEventListener("click", function(e){
+      var b = e.target.closest(".fbtn");
+      if (!b) return;
+      var v = b.dataset[attr];
+      if (set.has(v)){ set.delete(v); b.setAttribute("aria-pressed", "false"); }
+      else { set.add(v); b.setAttribute("aria-pressed", "true"); }
+      applyFilters();
+    });
+  }
+  bindFilter(document.getElementById("fprio"), activePrio, "prio");
+  bindFilter(document.getElementById("fform"), activeForm, "form");
+
+  var hd = document.getElementById("hidedone");
+  hd.addEventListener("click", function(){
+    hideDone = !hideDone;
+    hd.setAttribute("aria-pressed", String(hideDone));
+    applyFilters();
+  });
+
+  /* ---------- group-by-instrument view ---------- */
+  var FORMS = [
+    ["demographics", "Demographics", "Designer → Demographics"],
+    ["medhist",      "Medical History", "Designer → Medical History"],
+    ["screening",    "Screening &amp; Eligibility", "Designer → Screening and Eligibility"],
+    ["blood",        "Blood Sampling", "Designer → Blood Sampling"],
+    ["vaccination",  "Vaccination", "Designer → Vaccination"],
+    ["ae",           "Adverse Events", "Designer → Adverse Events"],
+    ["pd",           "Protocol Deviations", "Designer → Protocol Deviations"],
+    ["delivery",     "Delivery Data", "Designer → Delivery Data"],
+    ["project",      "Project-level &amp; deliverables", "Project Setup · Data Quality · submission"]
+  ];
+  var formview = document.getElementById("formview");
+  var home = new Map();               /* item -> [parent, nextSibling] */
+  items.forEach(function(it){ home.set(it, [it.parentNode, it.nextSibling]); });
+
+  FORMS.forEach(function(f){
+    var g = document.createElement("section");
+    g.className = "fgroup";
+    g.dataset.form = f[0];
+    g.innerHTML =
+      '<div class="fghead"><h2>' + f[1] + '</h2>' +
+      '<span class="fgwhere">' + f[2] + '</span>' +
+      '<span class="fgcount"></span></div>' +
+      '<div class="items"></div>';
+    formview.appendChild(g);
+  });
+
+  var groupOn = false;
+  var bf = document.getElementById("byform");
+  bf.addEventListener("click", function(){
+    groupOn = !groupOn;
+    bf.setAttribute("aria-pressed", String(groupOn));
+    document.body.classList.toggle("byform", groupOn);
+    if (groupOn){
+      FORMS.forEach(function(f){
+        var box = formview.querySelector('.fgroup[data-form="' + f[0] + '"] .items');
+        items.filter(function(it){ return it.dataset.form === f[0]; })
+             .forEach(function(it){ box.appendChild(it); });
+      });
+    } else {
+      /* restore original document order, back to front so nextSibling holds */
+      items.slice().reverse().forEach(function(it){
+        var h = home.get(it);
+        h[0].insertBefore(it, h[1]);
+      });
+    }
+    applyFilters();
+  });
+
+  var search = document.getElementById("search");
+  search.addEventListener("input", function(){
+    q = search.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  /* ---------- copy buttons ---------- */
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest(".copy");
+    if (!btn) return;
+    var pre = btn.closest(".snip").querySelector("pre");
+    var text = pre.textContent;
+    var done = function(msg){
+      var old = btn.textContent;
+      btn.textContent = msg;
+      btn.classList.add("ok");
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove("ok"); }, 1400);
+    };
+    var fallback = function(){
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch(err){ ok = false; }
+      document.body.removeChild(ta);
+      if (ok) { done("Copied"); }
+      else {
+        var r = document.createRange();
+        r.selectNodeContents(pre);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+        done("Selected");
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done("Copied"); }, fallback);
+    } else {
+      fallback();
+    }
+  });
+
+  paintProgress();
+  applyFilters();
+})();
+</script>
